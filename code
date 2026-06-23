@@ -1,0 +1,3265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital CS Progress — SmartBear</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange:       #F47920;
+    --orange-dark:  #D4620A;
+    --orange-deep:  #B8530A;
+    --orange-light: #FDE8D8;
+    --orange-pale:  #FFF4EC;
+    --orange-mid:   #FAC89A;
+    --white:        #FFFFFF;
+    --off-white:    #FAFAFA;
+    --charcoal:     #1C1C1C;
+    --grey-dark:    #3D3D3D;
+    --grey-mid:     #6B6B6B;
+    --grey-light:   #E8E8E8;
+    --grey-pale:    #F4F4F4;
+    --green:        #2D9E5F;
+    --green-bg:     #E8F7EF;
+    --blue:         #0070C0;
+    --blue-bg:      #E5F2FB;
+    --red:          #D63232;
+    --red-bg:       #FDEAEA;
+    --shadow:       0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg:    0 8px 32px rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--charcoal);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(110deg, #0D1B4B 0%, #1A1060 20%, #4B2580 40%, #8B3A8F 58%, #C4445A 78%, #E05A3A 100%);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(13,27,75,0.5);
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-bear {
+    width: 36px;
+    height: 36px;
+    background: var(--orange);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .logo-text {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: white;
+  }
+  .logo-text span { color: var(--orange); }
+  .header-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.01em;
+  }
+  .header-date {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── Page title band ── */
+  .hero {
+    background: linear-gradient(135deg, var(--orange-dark) 0%, var(--orange) 60%, #F5A54A 100%);
+    padding: 36px 40px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    right: 80px; bottom: -80px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 8px;
+  }
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    font-style: italic;
+  }
+  .hero-pills {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .hero-pill {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  /* ── Tab nav ── */
+  .tab-nav {
+    background: white;
+    border-bottom: 1px solid var(--grey-light);
+    padding: 0 40px;
+    display: flex;
+    gap: 4px;
+    position: sticky;
+    top: 64px;
+    z-index: 90;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .tab-btn {
+    padding: 16px 20px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--grey-mid);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--orange); }
+  .tab-btn.active { color: var(--orange-dark); border-bottom-color: var(--orange); }
+
+  /* ── Main content ── */
+  .main { padding: 32px 40px 60px; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Section header ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--charcoal);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title-dot {
+    width: 10px; height: 10px;
+    background: var(--orange);
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .section-meta {
+    font-size: 12px;
+    color: var(--grey-mid);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── Table ── */
+  .table-wrap {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid var(--grey-light);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  thead tr {
+    background: var(--charcoal);
+  }
+  thead th {
+    padding: 13px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: rgba(255,255,255,0.85);
+    text-align: left;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    white-space: normal;
+  }
+  thead th:last-child { border-right: none; }
+  thead th.product-col { color: var(--orange-mid); }
+
+  tbody tr {
+    border-bottom: 1px solid var(--grey-light);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:nth-child(even) { background: var(--grey-pale); }
+  tbody tr:hover { background: var(--orange-pale); }
+
+  td {
+    padding: 14px 14px;
+    font-size: 13px;
+    vertical-align: top;
+    border-right: 1px solid var(--grey-light);
+    line-height: 1.5;
+  }
+  td:last-child { border-right: none; }
+
+  .product-name {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--orange-dark);
+    letter-spacing: 0.01em;
+  }
+
+  .text-cell {
+    color: var(--grey-dark);
+    font-size: 12.5px;
+  }
+
+  /* ── Dropdowns ── */
+  select {
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1.5px solid var(--grey-light);
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B6B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+  select:hover { border-color: var(--orange-mid); }
+  select:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(244,121,32,0.12); }
+
+  select.status-not-started { background-color: var(--red-bg); color: var(--red); border-color: #F5C0C0; }
+  select.status-in-progress { background-color: var(--blue-bg); color: var(--blue); border-color: #B0D8F0; }
+  select.status-completed   { background-color: var(--green-bg); color: var(--green); border-color: #A8DFC0; }
+  select.status-empty       { background-color: white; color: var(--grey-mid); }
+
+  select.yn-yes { background-color: var(--green-bg); color: var(--green); border-color: #A8DFC0; }
+  select.yn-no  { background-color: var(--red-bg); color: var(--red); border-color: #F5C0C0; }
+  select.yn-empty { background-color: white; color: var(--grey-mid); }
+
+  /* ── Editable text cells ── */
+  .editable {
+    min-height: 36px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1.5px solid transparent;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12.5px;
+    color: var(--grey-dark);
+    line-height: 1.5;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    background: transparent;
+    resize: none;
+    overflow: hidden;
+  }
+  .editable:hover { border-color: var(--orange-mid); background: white; }
+  .editable:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(244,121,32,0.12); background: white; }
+  .editable.has-content { color: var(--grey-dark); }
+  .editable:empty::before { content: attr(data-placeholder); color: #BBBBBB; font-style: italic; }
+
+  /* Date input */
+  input[type="date"] {
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1.5px solid var(--grey-light);
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    color: var(--grey-dark);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: white;
+  }
+  input[type="date"]:hover { border-color: var(--orange-mid); }
+  input[type="date"]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(244,121,32,0.12); }
+
+  /* ── Save banner ── */
+  .save-bar {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 200;
+  }
+  .btn-save {
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(244,121,32,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(244,121,32,0.5); }
+  .btn-save:active { transform: translateY(0); }
+  .save-status {
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: var(--green-bg);
+    padding: 8px 14px;
+    border-radius: 8px;
+  }
+  .save-status.visible { opacity: 1; }
+
+  /* ── Progress bars ── */
+  .progress-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .progress-card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px 18px 14px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--grey-light);
+  }
+  .progress-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .progress-product {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--orange-dark);
+  }
+  .progress-track {
+    width: 100%;
+    height: 10px;
+    background: var(--grey-light);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.7s ease;
+  }
+  .progress-fill.complete { background: var(--green); }
+  .progress-fill.partial  { background: var(--blue); }
+  .progress-fill.none     { background: var(--red); width: 5% !important; }
+  .progress-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .progress-label.complete { color: var(--green); }
+  .progress-label.partial  { color: var(--blue); }
+  .progress-label.none     { color: var(--red); }
+
+  /* Column widths - CJM table */
+  .cjm-table .col-product   { width: 13%; }
+  .cjm-table .col-cjm       { width: 12%; }
+  .cjm-table .col-playbook  { width: 12%; }
+  .cjm-table .col-planhat   { width: 12%; }
+  .cjm-table .col-target    { width: 9%; }
+  .cjm-table .col-next      { width: 19%; }
+  .cjm-table .col-blockers  { width: 17%; }
+  .cjm-table .col-actions   { width: 6%; }
+
+  /* Column widths - PUD table */
+  .pud-table .col-product    { width: 12%; }
+  .pud-table .col-source     { width: 11%; }
+  .pud-table .col-amplitude  { width: 9%; }
+  .pud-table .col-next       { width: 30%; }
+  .pud-table .col-blockers   { width: 32%; }
+  .pud-table .col-actions    { width: 6%; }
+
+  /* Column widths - KRA table */
+  .kra-table .col-ws       { width: 17%; }
+  .kra-table .col-raci     { width: 7%; }
+  .kra-table .col-status   { width: 11%; }
+  .kra-table .col-target   { width: 8%; }
+  .kra-table .col-next     { width: 25.5%; }
+  .kra-table .col-blockers { width: 25.5%; }
+  .kra-table .col-actions  { width: 6%; }
+
+  .row-delete-btn {
+    background: none; border: none; cursor: pointer; font-size: 15px;
+    color: var(--grey-mid); padding: 4px 6px; border-radius: 6px; transition: all 0.15s;
+    line-height: 1; font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  }
+  .row-delete-btn:hover { background: var(--red-bg); color: var(--red); }
+  .row-delete-btn.confirming {
+    background: var(--red); color: white; font-size: 11px; font-weight: 700;
+    padding: 5px 9px; letter-spacing: 0.02em;
+  }
+  .row-delete-btn.confirming:hover { background: #C0392B; }
+
+  .raci-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    padding: 3px 9px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.02em;
+  }
+  .raci-badge.raci-ar { background: #1B4FA0; color: white; }
+  .raci-badge.raci-r  { background: #B7CFEC; color: #0D2E61; }
+
+  .ws-name {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--charcoal);
+  }
+  .ws-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    color: var(--grey-mid);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .product-name { word-break: break-word; white-space: normal; }
+
+  /* ── Onboarding tab (Nirali) ── */
+  .onb-banner {
+    background: linear-gradient(135deg, #14213D 0%, #1F3358 100%);
+    border-radius: 12px;
+    padding: 20px 26px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .onb-banner-left { display: flex; align-items: center; gap: 14px; }
+  .onb-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--orange);
+    color: white;
+    font-weight: 700;
+    font-size: 17px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .onb-banner-title { color: white; font-weight: 700; font-size: 16px; }
+  .onb-banner-sub { color: rgba(255,255,255,0.6); font-size: 12.5px; margin-top: 2px; }
+  .onb-live {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11.5px; color: rgba(255,255,255,0.75);
+    font-family: 'DM Mono', monospace;
+  }
+  .onb-live-dot { width: 7px; height: 7px; border-radius: 50%; background: #2D9E5F; flex-shrink: 0; }
+  .onb-live-dot.stale { background: var(--grey-mid); }
+  .onb-live-dot.err { background: var(--red); }
+
+  .onb-stat-row { display: flex; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
+  .onb-stat-card {
+    background: white; border: 1px solid var(--grey-light); border-radius: 10px;
+    padding: 16px 20px; flex: 1; min-width: 110px; box-shadow: var(--shadow);
+  }
+  .onb-stat-val { font-size: 26px; font-weight: 700; color: var(--charcoal); font-family: 'DM Mono', monospace; }
+  .onb-stat-lbl { font-size: 11.5px; color: var(--grey-mid); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .onb-overall {
+    background: white; border: 1px solid var(--grey-light); border-radius: 12px;
+    padding: 18px 22px; margin-bottom: 24px; box-shadow: var(--shadow);
+  }
+  .onb-overall-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .onb-overall-title { font-weight: 700; font-size: 14px; color: var(--charcoal); }
+  .onb-overall-pct { font-weight: 700; font-size: 18px; color: var(--orange-dark); }
+  .onb-pbar-bg { background: var(--grey-light); border-radius: 99px; overflow: hidden; height: 9px; width: 100%; }
+  .onb-pbar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+  .onb-week-bars { display: flex; gap: 18px; margin-top: 18px; flex-wrap: wrap; }
+  .onb-week-bar { flex: 1; min-width: 140px; }
+  .onb-week-bar-hdr { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700; margin-bottom: 6px; }
+  .onb-week-bar-count { color: var(--grey-mid); font-weight: 400; }
+  .onb-week-bar-pct { font-size: 12px; font-weight: 700; margin-top: 5px; }
+
+  .onb-section-title {
+    font-size: 14px; font-weight: 700; color: var(--charcoal);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .onb-weeks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-bottom: 26px; }
+  .onb-week-card { background: white; border: 1px solid var(--grey-light); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+  .onb-week-card-hdr { padding: 12px 16px; display: flex; align-items: center; gap: 10px; color: white; }
+  .onb-week-num {
+    width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .onb-week-card-title { font-size: 12.5px; font-weight: 700; }
+  .onb-week-card-days { font-size: 10.5px; opacity: 0.75; margin-top: 1px; }
+  .onb-task-list { padding: 10px 14px 14px; }
+  .onb-task-row {
+    display: flex; align-items: center; gap: 9px; padding: 7px 0;
+    font-size: 12px; color: var(--grey-dark); border-bottom: 1px solid var(--grey-pale);
+  }
+  .onb-task-row:last-child { border-bottom: none; }
+  .onb-task-check {
+    width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--grey-light);
+    display: flex; align-items: center; justify-content: center; font-size: 9px; color: white;
+    flex-shrink: 0;
+  }
+  .onb-task-row.done .onb-task-check { border-color: var(--green); background: var(--green); }
+  .onb-task-row.done .onb-task-label { color: var(--grey-mid); text-decoration: line-through; }
+  .onb-task-label { flex: 1; }
+  .onb-task-row .row-delete-btn { font-size: 12px; padding: 2px 5px; flex-shrink: 0; }
+
+  .onb-tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .onb-tool-card {
+    background: white; border: 1px solid var(--grey-light); border-radius: 10px;
+    padding: 12px 14px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow);
+  }
+  .onb-tool-icon { font-size: 19px; }
+  .onb-tool-name { font-size: 12.5px; font-weight: 700; color: var(--charcoal); }
+  .onb-tool-status-select {
+    margin-left: auto;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 99px;
+    padding: 4px 26px 4px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+    transition: border-color 0.2s;
+  }
+  .onb-tool-status-select.granted { background-color: var(--green-bg); color: var(--green); border: 1.5px solid #A8DFC0; }
+  .onb-tool-status-select.pending { background-color: var(--orange-pale); color: var(--orange-dark); border: 1.5px solid var(--orange-mid); }
+
+  .onb-error {
+    background: var(--red-bg); color: var(--red); border-radius: 10px;
+    padding: 14px 18px; font-size: 13px; margin-bottom: 20px;
+  }
+  .onb-footnote { font-size: 11.5px; color: var(--grey-mid); margin-top: 4px; }
+
+  /* ── Login gate ── */
+  .login-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: linear-gradient(135deg, #14213D 0%, #1F3358 60%, #3A2C5E 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .login-box {
+    background: white; border-radius: 16px; padding: 38px 40px;
+    width: 380px; max-width: 100%; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .login-logo { font-size: 30px; margin-bottom: 10px; }
+  .login-title { font-size: 17px; font-weight: 700; color: var(--charcoal); margin-bottom: 4px; }
+  .login-sub { font-size: 12.5px; color: var(--grey-mid); margin-bottom: 22px; }
+  .login-input {
+    width: 100%; border: 1.5px solid var(--grey-light); border-radius: 9px;
+    padding: 11px 14px; font-size: 15px; outline: none; margin-bottom: 12px;
+    text-align: center; letter-spacing: 2px; font-family: 'DM Mono', monospace;
+    transition: border-color 0.2s;
+  }
+  .login-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(244,121,32,0.12); }
+  .login-error { color: var(--red); font-size: 12.5px; margin-bottom: 12px; }
+  .login-btn {
+    width: 100%; background: var(--orange); color: white; border: none;
+    border-radius: 9px; padding: 11px; font-size: 14px; font-weight: 700;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(244,121,32,0.35);
+  }
+  .login-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(244,121,32,0.45); }
+  .login-footnote { font-size: 11px; color: var(--grey-mid); margin-top: 14px; }
+
+  .user-badge {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.12); border-radius: 99px;
+    padding: 5px 8px 5px 12px; font-size: 12px; color: white;
+  }
+  .user-badge-name { font-weight: 600; }
+  .user-badge-signout {
+    background: rgba(255,255,255,0.18); border: none; border-radius: 99px;
+    color: white; font-size: 11px; font-weight: 700; padding: 5px 11px;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s;
+  }
+  .user-badge-signout:hover { background: rgba(255,255,255,0.3); }
+
+  /* ── Add task modal ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 400;
+    background: rgba(20,33,61,0.55); align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal-box {
+    background: white; border-radius: 16px; padding: 28px 32px;
+    width: 440px; max-width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .modal-box-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .modal-box-title { font-size: 17px; font-weight: 700; color: var(--charcoal); }
+  .modal-box-close { background: none; border: none; font-size: 18px; color: var(--grey-mid); cursor: pointer; }
+  .form-label {
+    display: block; font-size: 11.5px; font-weight: 700; color: var(--grey-mid);
+    text-transform: uppercase; letter-spacing: 0.05em; margin: 14px 0 6px;
+  }
+  .form-select, .form-input {
+    width: 100%; border: 1.5px solid var(--grey-light); border-radius: 8px;
+    padding: 10px 12px; font-size: 13.5px; font-family: 'DM Sans', sans-serif;
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-select:focus, .form-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(244,121,32,0.12); }
+  .modal-box-error {
+    background: var(--red-bg); color: var(--red); border-radius: 8px;
+    padding: 10px 14px; font-size: 12.5px; margin-top: 14px;
+  }
+  .modal-box-submit {
+    width: 100%; background: var(--orange); color: white; border: none;
+    border-radius: 9px; padding: 12px; font-size: 14px; font-weight: 700;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 18px;
+    transition: transform 0.15s;
+  }
+  .modal-box-submit:hover { transform: translateY(-1px); }
+
+  .modal-box-secondary {
+    width: 100%; background: white; color: var(--orange-dark); border: 1.5px dashed var(--orange-mid);
+    border-radius: 8px; padding: 9px; font-size: 12.5px; font-weight: 700;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 8px; transition: background 0.15s;
+  }
+  .modal-box-secondary:hover { background: var(--orange-pale); }
+
+  .new-tab-col-row {
+    display: flex; gap: 8px; align-items: center; margin-bottom: 8px;
+  }
+  .new-tab-col-row input[type=text] {
+    flex: 1; border: 1.5px solid var(--grey-light); border-radius: 7px;
+    padding: 8px 10px; font-size: 12.5px; font-family: 'DM Sans', sans-serif; outline: none;
+  }
+  .new-tab-col-row select {
+    border: 1.5px solid var(--grey-light); border-radius: 7px; padding: 8px 8px;
+    font-size: 12px; font-family: 'DM Sans', sans-serif; outline: none; width: 110px;
+  }
+  .new-tab-col-remove {
+    background: none; border: none; color: var(--grey-mid); cursor: pointer;
+    font-size: 14px; padding: 4px 6px; border-radius: 6px; flex-shrink: 0;
+  }
+  .new-tab-col-remove:hover { background: var(--red-bg); color: var(--red); }
+
+  .tab-btn-new {
+    color: var(--orange-dark) !important; border: 1.5px dashed var(--orange-mid);
+    border-radius: 8px; padding: 8px 14px !important; margin-left: 4px;
+  }
+  .tab-btn-new:hover { background: var(--orange-pale); }
+
+  .tab-btn-wrap { position: relative; display: inline-flex; align-items: center; }
+  .tab-btn-delete {
+    font-size: 11px !important; padding: 2px 5px !important; opacity: 0;
+    margin-left: -6px; transition: opacity 0.15s; position: relative; z-index: 2;
+  }
+  .tab-btn-wrap:hover .tab-btn-delete { opacity: 1; }
+  .tab-btn-delete.confirming { opacity: 1 !important; }
+
+  .panel-delete-tab-btn {
+    font-size: 12.5px !important; font-weight: 700; padding: 9px 16px !important;
+    border: 1.5px solid var(--grey-light) !important; border-radius: 8px !important;
+  }
+
+  .custom-tab-empty { text-align: center; color: var(--grey-mid); font-size: 13px; padding: 50px 0; }
+
+  /* ── Project/ Tasks — locked tab + sticky note board ── */
+  .proj-lock {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 420px; padding: 40px 20px;
+  }
+  .proj-lock-box {
+    background: white; border: 1px solid var(--grey-light); border-radius: 16px;
+    padding: 36px 38px; width: 360px; max-width: 100%; text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .proj-lock-icon { font-size: 28px; margin-bottom: 8px; }
+  .proj-lock-title { font-size: 16px; font-weight: 700; color: var(--charcoal); margin-bottom: 4px; }
+  .proj-lock-sub { font-size: 12px; color: var(--grey-mid); margin-bottom: 20px; }
+
+  .proj-board-hdr {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 22px; flex-wrap: wrap; gap: 12px;
+  }
+  .proj-board-title { font-size: 17px; font-weight: 700; color: var(--charcoal); }
+  .proj-board-sub { font-size: 12px; color: var(--grey-mid); margin-top: 3px; }
+
+  .proj-board {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px; align-items: start;
+  }
+  .proj-empty { text-align: center; color: var(--grey-mid); font-size: 13px; padding: 50px 0; }
+
+  .sticky-note {
+    position: relative; border-radius: 3px; padding: 18px 18px 50px;
+    min-height: 170px; box-shadow: 0 6px 14px rgba(0,0,0,0.13), 0 1px 0 rgba(255,255,255,0.4) inset;
+    font-family: 'DM Sans', sans-serif; transform: rotate(var(--tilt, -0.6deg));
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .sticky-note:hover { transform: rotate(0deg) translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,0.18); }
+  .sticky-note::before {
+    content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    width: 26px; height: 14px; background: rgba(255,255,255,0.55); border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .sticky-note-toprow { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; margin-bottom: 4px; }
+  .sticky-note-project {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+    color: rgba(58,50,38,0.55); outline: none; min-height: 13px; flex: 1;
+  }
+  .sticky-note-project:empty::before { content: attr(data-placeholder); color: rgba(58,50,38,0.3); font-style: italic; text-transform: none; }
+  .sticky-note-assignee {
+    font-size: 10px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+    background: rgba(255,255,255,0.5); border: none; border-radius: 99px;
+    padding: 2px 8px; color: #3A3226; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s;
+  }
+  .sticky-note-assignee:hover { background: rgba(255,255,255,0.85); }
+  .sticky-note-title {
+    font-weight: 700; font-size: 14.5px; color: #3A3226; margin-bottom: 8px;
+    line-height: 1.3; word-break: break-word; outline: none;
+  }
+  .sticky-note-desc {
+    font-size: 12.5px; color: #5A5040; line-height: 1.5; margin-bottom: 12px;
+    word-break: break-word; white-space: pre-wrap; outline: none; min-height: 16px;
+  }
+  .sticky-note-desc:empty::before { content: attr(data-placeholder); color: rgba(58,50,38,0.45); font-style: italic; }
+  .sticky-note-meta { font-size: 11px; color: #6B6150; margin-bottom: 4px; display: flex; gap: 6px; align-items: center; }
+  .proj-inline-date {
+    font-size: 10.5px; border: 1px solid rgba(58,50,38,0.25); border-radius: 4px;
+    padding: 2px 4px; background: rgba(255,255,255,0.6); font-family: 'DM Sans', sans-serif;
+    color: #3A3226; width: 88px;
+  }
+  .sticky-note-status {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+    padding: 3px 9px; border-radius: 99px; margin-top: 10px;
+    background: rgba(255,255,255,0.55); color: #3A3226; cursor: pointer; border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .sticky-note-actions { position: absolute; bottom: 12px; left: 18px; right: 18px; display: flex; justify-content: space-between; align-items: center; }
+  .sticky-note .row-delete-btn { background: rgba(255,255,255,0.5); color: #5A5040; }
+  .sticky-note .row-delete-btn:hover { background: var(--red); color: white; }
+
+  .proj-color-picker { display: flex; gap: 10px; margin-top: 4px; }
+  .proj-color-dot {
+    width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+    border: 2.5px solid transparent; display: inline-block; transition: transform 0.15s;
+  }
+  .proj-color-dot:hover { transform: scale(1.1); }
+  .proj-color-dot.selected { border-color: var(--charcoal); }
+
+  /* ── Board / Calendar view toggle ── */
+  .proj-view-toggle {
+    display: flex; background: var(--grey-pale); border-radius: 9px; padding: 3px; gap: 2px;
+  }
+  .proj-view-btn {
+    background: none; border: none; padding: 7px 14px; font-size: 12.5px; font-weight: 700;
+    font-family: 'DM Sans', sans-serif; color: var(--grey-mid); border-radius: 7px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .proj-view-btn.active { background: white; color: var(--orange-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .proj-view-btn:hover:not(.active) { color: var(--charcoal); }
+
+  /* ── Weekly calendar ── */
+  .proj-cal-nav {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .proj-cal-nav-btn {
+    background: white; border: 1.5px solid var(--grey-light); border-radius: 8px;
+    padding: 7px 14px; font-size: 12.5px; font-weight: 700; font-family: 'DM Sans', sans-serif;
+    color: var(--charcoal); cursor: pointer; transition: background 0.15s;
+  }
+  .proj-cal-nav-btn:hover { background: var(--grey-pale); }
+
+  .proj-archive-note {
+    background: var(--grey-pale); color: var(--grey-mid); font-size: 12.5px;
+    border-radius: 9px; padding: 10px 16px; margin-bottom: 18px;
+  }
+  .archive-card { opacity: 0.92; }
+  .archive-card .sticky-note-status { display: none; } /* archived = always completed, no need to show/cycle it */
+  .unarchive-btn {
+    background: rgba(255,255,255,0.55); border: none; border-radius: 99px;
+    padding: 4px 11px; font-size: 11px; font-weight: 700; color: #3A3226;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s;
+  }
+  .unarchive-btn:hover { background: rgba(255,255,255,0.9); }
+
+  .archive-toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    background: var(--charcoal); color: white; border-radius: 10px;
+    padding: 12px 18px; display: flex; align-items: center; gap: 16px;
+    font-size: 13px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 600;
+    animation: archiveToastIn 0.25s ease;
+  }
+  .archive-toast button {
+    background: var(--orange); color: white; border: none; border-radius: 7px;
+    padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  }
+  @keyframes archiveToastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  .proj-cal-range { font-size: 14px; font-weight: 700; color: var(--charcoal); }
+
+  .proj-cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;
+  }
+  .proj-cal-day {
+    background: white; border: 1px solid var(--grey-light); border-radius: 10px;
+    min-height: 220px; padding: 10px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .proj-cal-day.today { border-color: var(--orange); box-shadow: 0 0 0 2px rgba(244,121,32,0.15); }
+  .proj-cal-day-hdr { font-size: 11px; font-weight: 700; color: var(--grey-mid); text-transform: uppercase; letter-spacing: 0.03em; }
+  .proj-cal-day-num { font-size: 16px; font-weight: 700; color: var(--charcoal); margin-bottom: 6px; }
+  .proj-cal-day.today .proj-cal-day-num { color: var(--orange-dark); }
+  .proj-cal-day-notes { display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
+  .proj-cal-add-btn {
+    background: none; border: 1.5px dashed var(--grey-light); border-radius: 7px;
+    padding: 5px; font-size: 11px; color: var(--grey-mid); cursor: pointer; margin-top: auto;
+    font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+  }
+  .proj-cal-add-btn:hover { border-color: var(--orange-mid); color: var(--orange-dark); background: var(--orange-pale); }
+
+  .cal-note {
+    border-radius: 6px; padding: 7px 9px; font-size: 11.5px; cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.12); position: relative; transition: transform 0.1s;
+  }
+  .cal-note:hover { transform: translateY(-1px); }
+  .cal-note-project {
+    font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+    color: rgba(58,50,38,0.6); margin-bottom: 2px;
+  }
+  .cal-note-title { font-weight: 700; color: #3A3226; line-height: 1.3; word-break: break-word; }
+  .cal-note-assignee { font-size: 9.5px; color: rgba(58,50,38,0.6); margin-top: 3px; }
+  .cal-note-del {
+    position: absolute; top: 3px; right: 3px; background: rgba(255,255,255,0.6);
+    border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 9px;
+    cursor: pointer; display: none; align-items: center; justify-content: center; color: #5A5040;
+  }
+  .cal-note:hover .cal-note-del { display: flex; }
+  .cal-note-del:hover { background: var(--red); color: white; }
+
+  @media (max-width: 1100px) {
+    .proj-cal-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 900px) {
+    .onb-weeks-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 1100px) {
+    .main { padding: 24px 20px 60px; }
+    .header, .tab-nav { padding-left: 20px; padding-right: 20px; }
+    .hero { padding: 28px 20px; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+
+<!-- Login gate -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">🔒</div>
+    <div class="login-title">Digital CS Progress Tracker</div>
+    <div class="login-sub">Sign in with your SmartBear email to continue</div>
+    <input type="email" class="login-input" id="login-email-input" placeholder="you@smartbear.com" autocomplete="username" style="letter-spacing:normal; text-align:left; font-family:'DM Sans',sans-serif;">
+    <input type="password" class="login-input" id="login-password-input" placeholder="Password" autocomplete="current-password" style="letter-spacing:normal; text-align:left; font-family:'DM Sans',sans-serif; margin-top:10px;">
+    <div class="login-error" id="login-error" style="display:none;"></div>
+    <button class="login-btn" id="login-submit-btn">Sign in →</button>
+    <div class="login-footnote">SmartBear team access only · contact Pranav if you need an account</div>
+  </div>
+</div>
+
+<!-- Dashboard content (hidden until unlocked) -->
+<div id="dashboard-root" style="display:none;">
+
+<!-- Header -->
+<header class="header">
+  <div class="header-logo">
+    <div style="background:white;border-radius:8px;padding:5px 12px;display:flex;align-items:center;">
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACiATcDASIAAhEBAxEB/8QAGwABAQEAAwEBAAAAAAAAAAAAAAcGBAUIAQP/xAA7EAACAQQBAwICCAQDCQEAAAAAAQIDBAURBgcSIRMxQWEIFCIyUWJxgRUWI0JSkaEzN1V1k5Sis9HS/8QAGwEBAAIDAQEAAAAAAAAAAAAAAAECAwQHBQb/xAAqEQEAAgECBQMEAwEBAAAAAAAAAQIRAwQFEiFBYQYxUSJxgeEUwfCh0f/aAAwDAQACEQMRAD8A9lgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGtpp78/g9AZLnXOsZxqEraGrzJNfZt4S8Q+c3/AGr5e7/1Oh4P1QoX1VWXIlRtK8pf07mH2aT38Jbf2f19vx18ZTyKxrYzP39hXlOdShcTi5ze5TW9qTfx2tP9zgHMdz6p39d3No6RWccv/vny6jtvSuwnaRSfqm0Z5u/47Y8PT38wYH/jeN/7qH/04Ob5lxzFWE7urlLa4a8RpW9WNSpN/gkn/q9L5nm/S/AGzf1rrzWYrpRE/eZa1PRO3i0TbUmY+0Qq2H6uVJZmaythCljqkkqbo7lUor8Zf41+Okvlv2KnYXlrf2dO8srincW9VbhUpy2mjysWfoHYVqOBvshUnUVO5rqFODk+3UF5kl+Lba3+U2vTfHd3udx/H1vqicznvH67eGr6l4Ds9ttv5Gj9MxiMdp/ffzj56qSDouoHKsZwnh2S5RmPVdnYUlOcaSTnOTkoxhHbS3KUopbaXny0TLH9Uer1/aUcpadCLmrjbiCqUJPkNCnWlBrcW6coqSbWvDSPvYpMxlz+bxE4WoHUctzM8DwzL8gdoq9THY6tefV3U7VN06bn2d2nretb0/0MF0F6u1OplXLWt7x5YK8sKVtcQpfW/XVajXi5Qmn2R14S8af3l+giszGSbxE8vdVARbl/XWphesVDgVnxZX9t/FMfjLrJO/8AT9GtdtNJU/TfdqLb+8tuMl4LSLVmuMlbRbOAEG4n9IO8zfMMPY1uEqz45mcvXxljmv4mpqrOG1Fqn6ae5N01pvX2npy7WXicu2Epa3pbFqTX3K3rf2fQQDinW/qZyjjVDkmD6I1b/E1lJxr0OQU25djcZpQdJSbTTWtedeNlK6b9RMf1A4DW5Px6xuJXFD1aNXHV5KFWFxCO/ScvZb3Fp/hJNpPaU207V90V1K2nENqDz9nuufUjAZPEYvNdFvqV7ma3oY+jPkVKTr1NxTinGm0vM4rcml5/UqnTTkHL8/Y3lbl/CJcTr0aqhQoyyMLv1oNbctwS7dPxpi2nNYzJXUracQ1oIXYdZuoebyObp8V6PSzVjicpcY2pdQz9Ol3TpS0/szpppuLi9La+1rbN70d6i2XUbA3d7Sxl1ib/AB13KyyFjcPcqFaKTaT0trzrbSe000tCdO0RmSupW04htwSTnfVTluK6mXHB+JdOv5oubfHU7+pNZeFrKMJScX9mcGvD7f7t+fbwaLpnyfnfILy+pcv6dT4lRo04St6ssrTu/rEm33R1BLt0knt++/kJpMRlMXiZw3IMT1q56unPCv49DGfxS6q3dG0tbP1/S9apUl7KXbLyoqT9nvWvmcLoz1GvedVeQ4/M8c/l3M4G8jbXVj9cVy4qUdxk5KMV5cZrxtfZ2m9kck45uxz15uXuoYJ5116kXPTXB4m/s8BHN18lkoWFOg7z6vqUoTkn3dkt+Ypa8e/v4Mnd9buVcYurOt1J6VX3GMLc140HkqWUp3kKMn8ZxhFajrbfnek9KT8Exp2mMwi2pWs4lbwE00mmmn5TQKLgAAAAAAAAAAAAAAcLOwvquGvKWNcFeToyjQc5dqjNrSbfy9yt7ctZnGcLUrzWiucZeduc5KOX5fk7+DTpzruNNr2cYJQi/wB1FP8Ac4GJx19lb6Fjjrapc3E/aEPgvxb9kvm/BsF0o5Ulruxv/Xl/+Sn9OOPS47x2Frc2trTvpSk69Wi3L1ftPtbbW/CaWvb3/E5js/T+73+7tbdVmkTmZnHzPtHnq6lvPUGz2G0iu1tF5jERGfHvPjo6PifS/E2VhN52Mb+7rQ7ZJSap0k/8Hs9/m/yS+OG570/yHHnO9svUvcYvLqa/qUV+dL4fmXj8dGv5VxzqDkeQ3l5jsw7SznPVGlDIVYKMUkl9lLSb1t/Nmv4NZ5qx49Ts8/Xjc3dOc16vrOq5wb2tykt78tfoke9PCNtvM7WNvOnFc4v89e/zn36/8fPxxjdbPG7ncV1ObGafH2+Me3T85ebC5dDcnG74hLHtx9Swryjpe/ZNuaf+bkv2M7y3ppmL7kV5dYe3xtrY1JJ0qfquOvC29KOlt7el4O46XcQ5FxjNV6t9KzdncUeyapVm33J7i9OK/Mv3PM4Hw7e8P4lm2nPL1rM46Y7T9sxD1OO8Q2PEOGzFdSObpaIz1z3j74mYaXqbxGx55wXKcUyNapQoX9OKVWmk5U5xkpwlp++pRi9fFbXxIzlM51r6LcfhfcilguacRx3p0alxS7qF9SpOShBva17uK/vb8bkvMi58wx+XynG7ywwOceCyVWKVvkFbRuPQakm36cmlLaTXn8SRZvpB1K5fawwfPOrrynHJVYTurW0wtG2q3KjJSUXOP3fKT/uW0nraWulacxjFp6OY6tZzmsdVC6m3lHIdFeT39s26Fzxy7rU21puMrabXj9GQzprUhw3kXSTltWXpY3kPFZYa/qN6hCpSj61KT/NLSivlF/v6K5VgY5fguW4xZ1IWcb3GVrCjNw7o0VOk6cXra2lteN/Aw2X6NY/PdGMB07zWVrd2HjRdO/taajL1KcXHujGXckmpSWnv3FLREYkvSZtmENsbWvd8a4Bze9pzhecu6qW2UaqL7UKXrShSh+iUZNfKR6X6z8gfF+lPJc5CqqVa3x9VW8n7KtNdlL/zlE6Xl3S6llMNwDD4nIwsLPh+Wsb6CqUXUlXp2y0qe01qUkvvef0ZzuuXBbzqPwZ8WtsvDF0a93RqXdSVF1HUpQbl2R1JafcoPb37exNrVtMZRFLVrOPd5UzHKsDZfR74jgMTjc9S5BxvIUcvCvVx0oW8q3fOc16j/t3U8P49kT2zYX1vlMJb5K0mp213bRr0pL+6E4qUX/k0ddzTjdtyPguW4q3G3o39hUs4SUdql3QcYyS/K9P9j8OmvHb3i3T3D8YyGQp39fG2itfrNOk6cZwjtQ+y29aj2r3+BF7xaE6dJpPjDz79HXq1iOD9AcXbZHjfLbuFlG5q1Lu0xM52jUq85L+u9QWu5Jttae0UT6J+DyljwbKcky1vC0q8qy1XM0LeE1JU6FVRcPK8efMl+Vx2k9paHpT02o8S6OUenWZu6WYt/SuaNzUjRdKNWnWnOTXa29eJ69zl9FeHZbgXBqPFsnnKeZpWdap9Srqg6coUJPuVOW5PbTctNaWmkktFr3rPNjvKKUtE1z2hO/pL/wC93oz/AM9n/wC61L0Tzql07ueZ8y4Pn6GWo2UOM5B3dSjOg5u4TnRl2pqS7f8AZPzp+/yKGY7TE1iF6VmLWn/ezy30eq9YIV+dR6d2/D6mN/m/IOvLMOv63r90d9vptLt7ez3872a/6I1aFO35vi8pQuKXLqGeqXGe9SUZQlVquXa6fb4UNwn48+dvemkmL6SdU+PZDOS4j1Xs8PYZXLXGTnbfwKlXanVlvzKo5PxFRXjS8b0ts2/RvpvDgFplri8zVfO5zNXX1rJ5GrSVP1Z+dKMU32xTlJ62/Mn7LSWW96zEsWnS0Wj8/wChM+XT55D6VWXfT2jgKuTfGKCrLMOqqSo+t57fTafd3dvv41ssXTafPZ4S4fUOlgKWUV1JUFh3UdF0OyGnL1G339/qfLXb8zE866Zc3yHVG55zwznttxu4uMdTsKkZ4uF05QjLuf320tvt9lvx7+TS9M8B1Fw15fVOb8/o8ooVacI21KniqVp6Ek33S3Bfa2mlp+2vmUtMTX3j+16RMWnOf6TD6VXI7C26j9OMNkaV1cWFlfPN31G1outVkqTSpagvdNqon8tnD6S82xOS+lTnLjEUMjaWPKcTCbpX9s6FR3Vukl2xfuvTjUe/xbKvacAuF1yvOpF7lKVem8RHGWNmqDUqEe5SlNz7vLb79aS8THUHgFxyPqBwvmGPytKwuuOXNWVWM6Dn9Zo1FFThtSXa+1SSfn7z8MtF645fCs0tnm8/pgPpp1lb8Y4ZcShUmqXKLeo40490pKNOq9RXxb14XxOj6889fUzBWXSvjvFeR2eZ5Dd01TlmcfKyjTpUpepOou/zLXZ50vuqXx0nV+tvTy46h4/AW1vlaWOeKzFLIylUoup6qhGS7FprTfd7+fb2PvWTp5cc3WAyOIy1LDZ/AZCN5Y3s6DqxS8d9OUVKLcZOMG1vz269mxS9Yiuexelpm2O+P23Vhbxs7G3tISco0KUaab92opLf+h+x1uYtMtcqk8dlo2ElBqonbxqxk3ryt+U1518PK2nrT7IwNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH//Z" style="height:36px;width:auto;display:block;" alt="SmartBear">
+    </div>
+  </div>
+  <div class="header-title">Digital CS Progress Tracker</div>
+  <div style="display:flex; align-items:center; gap:18px;">
+    <div class="user-badge" id="user-badge" style="display:none;">
+      <span>👤 <span class="user-badge-name" id="user-badge-name">—</span></span>
+      <button class="user-badge-signout" id="user-badge-signout">Sign out</button>
+    </div>
+    <div class="header-date" id="live-date"></div>
+  </div>
+</header>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow">SmartBear · Customer Success</div>
+  <h1>Digital CS Progress</h1>
+  <div class="hero-sub">Swagger · TestComplete · Qmetry · ReadyAPI · Reflect</div>
+  <div class="hero-pills">
+    <span class="hero-pill">Customer Journey Maps</span>
+    <span class="hero-pill">Product Usage Data</span>
+    <span class="hero-pill">5 Products</span>
+  </div>
+</div>
+
+<!-- Tab nav -->
+<nav class="tab-nav" id="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('cjm', this)">📍 Customer Journey Maps</button>
+  <button class="tab-btn" onclick="switchTab('pud', this)">📊 Product Usage Data</button>
+  <button class="tab-btn" onclick="switchTab('kra', this)">🎯 Planhat KRAs</button>
+  <button class="tab-btn" onclick="switchTab('onb', this)">🌱 Nirali's Onboarding</button>
+  <button class="tab-btn" onclick="switchTab('proj', this)">🔒 Project/ Tasks</button>
+  <span id="custom-tab-buttons"></span>
+  <button class="tab-btn tab-btn-new" onclick="openNewTabModal()">＋ New Tab</button>
+</nav>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- ── Tab 1: Customer Journey Maps ── -->
+  <div class="tab-panel active" id="tab-cjm">
+
+    <div class="progress-grid" id="cjm-progress-grid">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="section-header">
+      <div class="section-title"><span class="section-title-dot"></span> Customer Journey Maps</div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="onb-live" id="cjm-sync-indicator">
+          <span class="onb-live-dot stale" id="cjm-sync-dot"></span>
+          <span id="cjm-sync-label">Connecting…</span>
+        </div>
+        <div class="section-meta">5 products · 6 tracking fields</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="cjm-table">
+        <colgroup>
+          <col class="col-product"><col class="col-cjm"><col class="col-playbook">
+          <col class="col-planhat"><col class="col-target"><col class="col-next"><col class="col-blockers"><col class="col-actions">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="product-col">Product</th>
+            <th>Customer Journey Map</th>
+            <th>Digital Journey Playbook</th>
+            <th>Planhat Implementation</th>
+            <th>Target Date</th>
+            <th>Next Steps</th>
+            <th>Blockers</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="cjm-body"><!-- rows rendered from Supabase by JS (loadCjmRows) --></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Tab 2: Product Usage Data ── -->
+  <div class="tab-panel" id="tab-pud">
+
+    <div class="progress-grid" id="pud-progress-grid">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="section-header">
+      <div class="section-title"><span class="section-title-dot"></span> Product Usage Data</div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="onb-live" id="pud-sync-indicator">
+          <span class="onb-live-dot stale" id="pud-sync-dot"></span>
+          <span id="pud-sync-label">Connecting…</span>
+        </div>
+        <div class="section-meta">5 products · data source & amplitude tracking</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="pud-table">
+        <colgroup>
+          <col class="col-product"><col class="col-source">
+          <col class="col-amplitude"><col class="col-next"><col class="col-blockers"><col class="col-actions">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="product-col">Product</th>
+            <th>Data Source</th>
+            <th>Data in Amplitude</th>
+            <th>Next Steps</th>
+            <th>Blockers</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="pud-body"><!-- rows rendered from Supabase by JS (loadPudRows) --></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Tab 3: Planhat KRAs ── -->
+  <div class="tab-panel" id="tab-kra">
+
+    <div class="progress-grid" id="kra-progress-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="section-header">
+      <div class="section-title"><span class="section-title-dot"></span> Planhat KRAs — Digital CS Ownership</div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="onb-live" id="kra-sync-indicator">
+          <span class="onb-live-dot stale" id="kra-sync-dot"></span>
+          <span id="kra-sync-label">Connecting…</span>
+        </div>
+        <div class="section-meta">9 workstreams · R or A/R per RACI</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="kra-table">
+        <colgroup>
+          <col class="col-ws"><col class="col-raci"><col class="col-status">
+          <col class="col-target"><col class="col-next"><col class="col-blockers"><col class="col-actions">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="product-col">Workstream</th>
+            <th>RACI</th>
+            <th>Status</th>
+            <th>Target Date</th>
+            <th>Next Steps</th>
+            <th>Blockers</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="kra-body"><!-- rendered from Supabase by JS --></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Tab 4: Nirali's Onboarding Progress ── -->
+  <div class="tab-panel" id="tab-onb">
+
+    <div class="onb-banner">
+      <div class="onb-banner-left">
+        <div class="onb-avatar">N</div>
+        <div>
+          <div class="onb-banner-title">Nirali's Onboarding</div>
+          <div class="onb-banner-sub">Digital CS · structured onboarding plan · synced live with the onboarding dashboard</div>
+        </div>
+      </div>
+      <div class="onb-live" id="onb-sync-indicator">
+        <span class="onb-live-dot stale" id="onb-sync-dot"></span>
+        <span id="onb-sync-label">Connecting…</span>
+      </div>
+    </div>
+
+    <div id="onb-error-wrap"></div>
+
+    <div class="onb-stat-row" id="onb-stat-row">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="onb-overall">
+      <div class="onb-overall-hdr">
+        <span class="onb-overall-title">Overall onboarding progress</span>
+        <span class="onb-overall-pct" id="onb-overall-pct">—</span>
+      </div>
+      <div class="onb-pbar-bg"><div class="onb-pbar-fill" id="onb-overall-fill" style="background:var(--orange); width:0%;"></div></div>
+      <div class="onb-week-bars" id="onb-week-bars">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <div class="onb-section-title"><span class="section-title-dot"></span> Onboarding Plan — by Week</div>
+    <div class="onb-weeks-grid" id="onb-weeks-grid">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="onb-section-title"><span class="section-title-dot"></span> Day 30–60 Plan</div>
+    <div class="onb-weeks-grid" id="onb-weeks-grid-3060">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="onb-section-title"><span class="section-title-dot"></span> Tools Access</div>
+    <div class="onb-tools-grid" id="onb-tools-grid">
+      <!-- filled by JS -->
+    </div>
+    <div class="onb-footnote">Changes here sync live (both ways) with the onboarding dashboard's database · source: <a href="https://pranav-bhatnagar19.github.io/digitalcsnewemployeeonboarding/" target="_blank" style="color:var(--orange-dark);">full interactive dashboard ↗</a></div>
+
+  </div>
+
+  <!-- ── Tab 5: Project/ Tasks (locked, Pranav + Nirali only) ── -->
+  <div class="tab-panel" id="tab-proj">
+
+    <!-- Shown if the logged-in user lacks Project/Tasks access (checked server-side via RLS) -->
+    <div class="proj-lock" id="proj-lock">
+      <div class="proj-lock-box">
+        <div class="proj-lock-icon">🔒</div>
+        <div class="proj-lock-title">Project/ Tasks</div>
+        <div class="proj-lock-sub">Restricted — your account doesn't have access to this tab.<br>Contact Pranav if you believe this is wrong.</div>
+      </div>
+    </div>
+
+    <!-- Sticky-note board — hidden unless the account has Project/Tasks access -->
+    <div id="proj-board" style="display:none;">
+      <div class="proj-board-hdr">
+        <div>
+          <div class="proj-board-title">🔒 Project/ Tasks</div>
+          <div class="proj-board-sub">Shared with Nirali · synced live via Supabase · still gated by its own PIN</div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <div class="proj-view-toggle" id="proj-view-toggle">
+            <button class="proj-view-btn active" data-view="board" onclick="setProjView('board')">🗂 Board</button>
+            <button class="proj-view-btn" data-view="calendar" onclick="setProjView('calendar')">📅 Calendar</button>
+            <button class="proj-view-btn" data-view="archive" onclick="setProjView('archive')">📦 Archive</button>
+          </div>
+          <button class="btn-save" onclick="openProjAddTaskModal()">＋ Add Task</button>
+        </div>
+      </div>
+
+      <!-- Board view -->
+      <div id="proj-view-board">
+        <div class="proj-board" id="proj-board-grid">
+          <!-- filled by JS -->
+        </div>
+        <div class="proj-empty" id="proj-empty" style="display:none;">No tasks yet — add your first one above.</div>
+      </div>
+
+      <!-- Calendar view -->
+      <div id="proj-view-calendar" style="display:none;">
+        <div class="proj-cal-nav">
+          <button class="proj-cal-nav-btn" onclick="shiftProjWeek(-1)">← Prev</button>
+          <div class="proj-cal-range" id="proj-cal-range">—</div>
+          <button class="proj-cal-nav-btn" onclick="shiftProjWeek(0)">Today</button>
+          <button class="proj-cal-nav-btn" onclick="shiftProjWeek(1)">Next →</button>
+        </div>
+        <div class="proj-cal-grid" id="proj-cal-grid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Archive view -->
+      <div id="proj-view-archive" style="display:none;">
+        <div class="proj-archive-note">📦 Completed tasks land here automatically. Unarchive one to bring it back to the active board.</div>
+        <div class="proj-board" id="proj-archive-grid">
+          <!-- filled by JS -->
+        </div>
+        <div class="proj-empty" id="proj-archive-empty" style="display:none;">Nothing archived yet — completed tasks will appear here.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Custom tabs (created via + New Tab) get injected here -->
+  <div id="custom-tab-panels"></div>
+
+</main>
+
+<!-- Add Project Task modal -->
+<div class="modal-overlay" id="proj-task-overlay">
+  <div class="modal-box">
+    <div class="modal-box-hdr">
+      <div class="modal-box-title">Add a project task</div>
+      <button class="modal-box-close" onclick="closeProjAddTaskModal()">✕</button>
+    </div>
+
+    <label class="form-label">Task title</label>
+    <input type="text" class="form-input" id="proj-task-title" placeholder="e.g. Renewal pricing pilot">
+
+    <label class="form-label">Project</label>
+    <input type="text" class="form-input" id="proj-task-project" placeholder="e.g. Swagger Expansion" list="proj-known-projects">
+    <datalist id="proj-known-projects"></datalist>
+
+    <label class="form-label">Assigned to</label>
+    <select class="form-select" id="proj-task-assignee">
+      <option value="Pranav">Pranav</option>
+      <option value="Nirali">Nirali</option>
+    </select>
+
+    <label class="form-label">Description</label>
+    <textarea class="form-input" id="proj-task-desc" rows="3" placeholder="What's this about?" style="resize:vertical;font-family:'DM Sans',sans-serif;"></textarea>
+
+    <label class="form-label">Timeline</label>
+    <div style="display:flex; gap:10px;">
+      <input type="date" class="form-input" id="proj-task-start" style="flex:1;">
+      <input type="date" class="form-input" id="proj-task-due" style="flex:1;">
+    </div>
+
+    <label class="form-label">Status</label>
+    <select class="form-select" id="proj-task-status">
+      <option value="not-started">Not Started</option>
+      <option value="in-progress">In Progress</option>
+      <option value="completed">Completed</option>
+    </select>
+
+    <label class="form-label">Sticky note colour</label>
+    <div class="proj-color-picker" id="proj-color-picker">
+      <span class="proj-color-dot" data-color="yellow" style="background:#FFE680;"></span>
+      <span class="proj-color-dot" data-color="orange" style="background:#FFC089;"></span>
+      <span class="proj-color-dot" data-color="pink" style="background:#FFB3C6;"></span>
+      <span class="proj-color-dot" data-color="green" style="background:#B8E8C8;"></span>
+      <span class="proj-color-dot" data-color="blue" style="background:#AFD8F0;"></span>
+      <span class="proj-color-dot" data-color="purple" style="background:#D6C2EE;"></span>
+    </div>
+
+    <div class="modal-box-error" id="proj-task-error" style="display:none;"></div>
+
+    <button class="modal-box-submit" onclick="submitProjTask()">Add task</button>
+  </div>
+</div>
+
+<!-- New Tab builder modal -->
+<div class="modal-overlay" id="new-tab-overlay">
+  <div class="modal-box" style="width:480px;">
+    <div class="modal-box-hdr">
+      <div class="modal-box-title">Create a new tab</div>
+      <button class="modal-box-close" onclick="closeNewTabModal()">✕</button>
+    </div>
+
+    <label class="form-label">Tab icon (emoji, optional)</label>
+    <input type="text" class="form-input" id="new-tab-icon" placeholder="📁" maxlength="4" style="width:70px;">
+
+    <label class="form-label">Tab name</label>
+    <input type="text" class="form-input" id="new-tab-name" placeholder="e.g. ReadyAPI Rollout">
+
+    <label class="form-label">Columns</label>
+    <div id="new-tab-columns"></div>
+    <button type="button" class="modal-box-secondary" onclick="addNewTabColumnRow()">＋ Add column</button>
+
+    <div class="modal-box-error" id="new-tab-error" style="display:none;"></div>
+
+    <button class="modal-box-submit" onclick="submitNewTab()">Create tab</button>
+  </div>
+</div>
+
+
+<!-- Save bar -->
+<div class="save-bar">
+  <span class="save-status" id="save-status">✓ Saved</span>
+  <button class="btn-save" onclick="openAddTaskModal()">＋ Add Task</button>
+  <button class="btn-save" onclick="saveData()">Save Progress</button>
+</div>
+
+</div><!-- /#dashboard-root -->
+
+<!-- Add Task modal -->
+<div class="modal-overlay" id="add-task-overlay">
+  <div class="modal-box">
+    <div class="modal-box-hdr">
+      <div class="modal-box-title">Add a new task</div>
+      <button class="modal-box-close" onclick="closeAddTaskModal()">✕</button>
+    </div>
+
+    <label class="form-label">Category</label>
+    <select class="form-select" id="add-task-category" onchange="onAddTaskCategoryChange()">
+      <option value="cjm">📍 Customer Journey Maps</option>
+      <option value="pud">📊 Product Usage Data</option>
+      <option value="kra">🎯 Planhat KRAs</option>
+      <option value="onb">🌱 Nirali's Onboarding</option>
+    </select>
+
+    <div id="add-task-week-wrap" style="display:none;">
+      <label class="form-label">Week</label>
+      <select class="form-select" id="add-task-week">
+        <option value="week1">Week 1 (Days 1–5)</option>
+        <option value="week2">Week 2 (Days 6–10)</option>
+        <option value="week3">Week 3 (Days 11–15)</option>
+        <option value="week5">Week 5 (Days 31–35)</option>
+        <option value="week6">Week 6 (Days 36–40)</option>
+        <option value="week7">Week 7 (Days 41–45)</option>
+        <option value="week8">Week 8 (Days 46–50)</option>
+      </select>
+    </div>
+
+    <label class="form-label" id="add-task-name-label">Product name</label>
+    <input type="text" class="form-input" id="add-task-name" placeholder="e.g. Reflect">
+
+    <div id="add-task-focus-wrap" style="display:none;">
+      <label class="form-label">Focus area</label>
+      <input type="text" class="form-input" id="add-task-focus" placeholder="e.g. Live Practice">
+    </div>
+
+    <div id="add-task-raci-wrap" style="display:none;">
+      <label class="form-label">RACI (Digital CS)</label>
+      <select class="form-select" id="add-task-raci">
+        <option value="R">R — Responsible</option>
+        <option value="A/R">A/R — Accountable & Responsible</option>
+      </select>
+    </div>
+
+    <div class="modal-box-error" id="add-task-error" style="display:none;"></div>
+
+    <button class="modal-box-submit" onclick="submitAddTask()">Add task</button>
+  </div>
+</div>
+
+
+<script>
+  // ══════════════════════════════════════════════════════════════
+  // Supabase backend — Digital CS Progress Dashboard's own project
+  // (separate from ONB_SUPABASE_* below, which is the existing
+  // Onboarding-dashboard project and is left untouched.)
+  //
+  // ⚠️ REPLACE THESE TWO VALUES after creating the project and
+  // running schema.sql — until then, every save will fail silently
+  // into the on-screen "offline" indicator rather than throwing.
+  // ══════════════════════════════════════════════════════════════
+  const DCS_SUPABASE_URL  = "https://ilogjalnmnltrvslydla.supabase.co";
+  const DCS_SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlsb2dqYWxubW5sdHJ2c2x5ZGxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTg3NTEsImV4cCI6MjA5Nzc3NDc1MX0.5Mw-ZNvffW298sHfIStT5xtBNRf6X8tLpQlq38FuwcY";
+
+  function dcsBackendConfigured() {
+    return !DCS_SUPABASE_URL.startsWith('REPLACE_') && !DCS_SUPABASE_ANON.startsWith('REPLACE_');
+  }
+
+  // Generic REST helper for the dcs_* tables. Throws on non-2xx so callers can catch.
+  // Uses the logged-in user's own access token (not just the anon key) so that
+  // Postgres RLS policies can see auth.uid() and enforce per-user access —
+  // this is what makes the database-side security real, not cosmetic.
+  async function dcsFetch(path, options = {}) {
+    if (!dcsBackendConfigured()) throw new Error('Supabase not configured yet');
+    if (!supabaseClient) throw new Error('Supabase client not initialized');
+
+    const { data: sessionData } = await supabaseClient.auth.getSession();
+    const accessToken = sessionData?.session?.access_token || DCS_SUPABASE_ANON;
+
+    const res = await fetch(`${DCS_SUPABASE_URL}/rest/v1/${path}`, {
+      ...options,
+      headers: {
+        'apikey': DCS_SUPABASE_ANON,
+        'Authorization': 'Bearer ' + accessToken,
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+      }
+    });
+    if (!res.ok) {
+      const bodyText = await res.text().catch(() => '');
+      throw new Error(`Supabase ${options.method || 'GET'} ${path} → HTTP ${res.status} ${bodyText}`);
+    }
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  // Small shared "is the backend reachable" indicator, reused by each tab's own
+  // sync dot. Centralizing it means one source of truth for online/offline state.
+  let dcsBackendOnline = null; // null = not checked yet, true/false after first call
+
+  function setSyncIndicator(dotId, labelId, state, label) {
+    const dot = document.getElementById(dotId);
+    const lbl = document.getElementById(labelId);
+    if (!dot || !lbl) return;
+    dot.className = 'onb-live-dot' + (state === 'live' ? '' : state === 'error' ? ' err' : ' stale');
+    lbl.textContent = label;
+  }
+
+  // Debounce helper — waits ms after last call before firing. Shared by
+  // every domain (table rows, sticky notes, custom tabs) for autosave-on-type.
+  function debounce(fn, ms) {
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+  }
+
+  // ── Supabase client (shared by auth + all dcs_* data calls) ─────
+  const supabaseClient = (typeof supabase !== 'undefined' && dcsBackendConfigured())
+    ? supabase.createClient(DCS_SUPABASE_URL, DCS_SUPABASE_ANON)
+    : null;
+
+  // The logged-in user's row from dcs_team_members (null until resolved).
+  // Drives both UI gating (e.g. showing the Project/Tasks tab) and the
+  // "logged in as ___" badge — the database's RLS policies are the real
+  // enforcement; this is just for a good UI, not a security boundary.
+  let dcsCurrentMember = null;
+
+  // ── Login gate ──────────────────────────────────────────────────
+  function showLoginError(msg) {
+    const err = document.getElementById('login-error');
+    err.textContent = msg;
+    err.style.display = 'block';
+  }
+
+  async function unlockDashboard(session) {
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('dashboard-root').style.display = 'block';
+
+    try {
+      const { data, error } = await supabaseClient
+        .from('dcs_team_members')
+        .select('display_name, can_access_project_tasks')
+        .eq('user_id', session.user.id)
+        .maybeSingle();
+      if (error) throw error;
+      dcsCurrentMember = data || null;
+    } catch (e) {
+      dcsCurrentMember = null;
+    }
+
+    const badge = document.getElementById('user-badge');
+    const nameEl = document.getElementById('user-badge-name');
+    if (dcsCurrentMember) {
+      nameEl.textContent = dcsCurrentMember.display_name;
+      badge.style.display = 'flex';
+    } else {
+      // Logged in via Supabase Auth but not yet added to dcs_team_members —
+      // RLS will block all data access until an admin adds them there.
+      nameEl.textContent = session.user.email + ' (no access yet)';
+      badge.style.display = 'flex';
+    }
+
+    // Hide the Project/Tasks tab entirely for anyone without that specific
+    // flag — a courtesy in the UI; the database enforces the real boundary.
+    const projTabBtn = document.querySelector('.tab-btn[onclick*="\'proj\'"]');
+    if (projTabBtn) {
+      projTabBtn.style.display = (dcsCurrentMember && dcsCurrentMember.can_access_project_tasks) ? '' : 'none';
+    }
+  }
+
+  function lockDashboard() {
+    document.getElementById('login-overlay').style.display = 'flex';
+    document.getElementById('dashboard-root').style.display = 'none';
+    document.getElementById('user-badge').style.display = 'none';
+    dcsCurrentMember = null;
+  }
+
+  async function attemptLogin() {
+    const emailInp = document.getElementById('login-email-input');
+    const pwInp = document.getElementById('login-password-input');
+    const err = document.getElementById('login-error');
+    err.style.display = 'none';
+
+    if (!supabaseClient) {
+      showLoginError('Backend not configured yet — set DCS_SUPABASE_URL / DCS_SUPABASE_ANON first.');
+      return;
+    }
+
+    const email = emailInp.value.trim();
+    if (!email || !pwInp.value) {
+      showLoginError('Please enter both email and password.');
+      return;
+    }
+    if (!email.toLowerCase().endsWith('@smartbear.com')) {
+      showLoginError('Please use your @smartbear.com email address.');
+      return;
+    }
+
+    const submitBtn = document.getElementById('login-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing in…';
+
+    try {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password: pwInp.value
+      });
+      if (error) throw error;
+      pwInp.value = '';
+      await unlockDashboard(data.session);
+    } catch (e) {
+      showLoginError(e.message === 'Invalid login credentials'
+        ? 'Incorrect email or password.'
+        : 'Sign-in failed: ' + e.message);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign in →';
+    }
+  }
+
+  async function signOutDashboard() {
+    try { await supabaseClient.auth.signOut(); } catch (e) {}
+    lockDashboard();
+  }
+
+  document.getElementById('login-submit-btn').addEventListener('click', attemptLogin);
+  [document.getElementById('login-email-input'), document.getElementById('login-password-input')].forEach(inp => {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); });
+  });
+  document.getElementById('user-badge-signout').addEventListener('click', signOutDashboard);
+
+  // Restore an existing session on page load (Supabase persists sessions in
+  // localStorage and silently refreshes expired tokens for us).
+  (async () => {
+    if (!supabaseClient) {
+      showLoginError('Backend not configured yet — set DCS_SUPABASE_URL / DCS_SUPABASE_ANON near the top of the script.');
+      return;
+    }
+    const { data } = await supabaseClient.auth.getSession();
+    if (data && data.session) {
+      await unlockDashboard(data.session);
+    }
+  })();
+
+  // Keep the UI in sync if the session changes elsewhere (e.g. token
+  // refreshed, or expired and the user gets signed out automatically).
+  if (supabaseClient) {
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') lockDashboard();
+    });
+  }
+
+  // Live date
+  document.getElementById('live-date').textContent = new Date().toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+
+  // Tab switching
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+    if (id === 'cjm') loadDcsRows('cjm');
+    if (id === 'pud') loadDcsRows('pud');
+    if (id === 'kra') loadDcsRows('kra');
+    if (id === 'onb') loadOnboardingData();
+    if (id === 'proj') checkProjAccess();
+  }
+
+  // Apply status colours on load and change
+  function updateStatus(sel, scope) {
+    sel.className = 'status-sel';
+    const v = sel.value;
+    if (v === 'completed')   sel.classList.add('status-completed');
+    else if (v === 'in-progress') sel.classList.add('status-in-progress');
+    else if (v === 'not-started') sel.classList.add('status-not-started');
+    else sel.classList.add('status-empty');
+    if (scope === 'cjm') updateCJMSummary();
+    if (scope === 'kra') updateKRASummary();
+  }
+
+  function updateYN(sel) {
+    sel.className = 'yn-sel';
+    const v = sel.value;
+    if (v === 'yes') sel.classList.add('yn-yes');
+    else if (v === 'no') sel.classList.add('yn-no');
+    else sel.classList.add('yn-empty');
+    updatePUDSummary();
+  }
+
+  function makeProgressCard(product, pct, label, cls) {
+    const fillStyle = cls === 'none' ? '' : `width:${pct}%`;
+    return `<div class="progress-card">
+      <div class="progress-card-header">
+        <span class="progress-product">${product}</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill ${cls}" style="${fillStyle}"></div>
+      </div>
+      <div class="progress-label ${cls}">${label}</div>
+    </div>`;
+  }
+
+  function updateCJMSummary() {
+    const rows = document.querySelectorAll('#tab-cjm tbody tr');
+    let html = '';
+    rows.forEach((row) => {
+      const nameEl = row.querySelector('.product-name');
+      const name = nameEl ? nameEl.textContent : '';
+      const sels = row.querySelectorAll('select');
+      const total = sels.length;
+      let completed = 0, hasProgress = false;
+      sels.forEach(s => {
+        if (s.value === 'completed') completed++;
+        else if (s.value === 'in-progress') hasProgress = true;
+      });
+      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+      let cls, label;
+      if (pct === 100)       { cls = 'complete'; label = 'Completed'; }
+      else if (pct > 0 || hasProgress) { cls = 'partial'; label = `${completed}/${total} Done`; }
+      else                   { cls = 'none'; label = 'Not Started'; }
+      html += makeProgressCard(name, pct, label, cls);
+    });
+    document.getElementById('cjm-progress-grid').innerHTML = html;
+  }
+
+  function updatePUDSummary() {
+    const rows = document.querySelectorAll('#tab-pud tbody tr');
+    let html = '';
+    rows.forEach((row) => {
+      const nameEl = row.querySelector('.product-name');
+      const name = nameEl ? nameEl.textContent : '';
+      const sel = row.querySelector('select');
+      const val = sel ? sel.value : '';
+      let pct, cls, label;
+      if (val === 'yes')       { pct = 100; cls = 'complete'; label = 'In Amplitude'; }
+      else if (val === 'no')   { pct = 40;  cls = 'partial';  label = 'In Progress'; }
+      else                     { pct = 0;   cls = 'none';     label = 'Unknown'; }
+      html += makeProgressCard(name, pct, label, cls);
+    });
+    document.getElementById('pud-progress-grid').innerHTML = html;
+  }
+
+  function updateKRASummary() {
+    const rows = document.querySelectorAll('#tab-kra tbody tr');
+    let html = '';
+    rows.forEach((row) => {
+      const nameEl = row.querySelector('.ws-name');
+      const idEl = row.querySelector('.ws-id');
+      const name = (idEl ? idEl.textContent + ' ' : '') + (nameEl ? nameEl.textContent : '');
+      const sel = row.querySelector('select.status-sel');
+      const val = sel ? sel.value : '';
+      let pct, cls, label;
+      if (val === 'completed')        { pct = 100; cls = 'complete'; label = 'Completed'; }
+      else if (val === 'in-progress') { pct = 50;  cls = 'partial';  label = 'In Progress'; }
+      else if (val === 'not-started') { pct = 5;   cls = 'none';     label = 'Not Started'; }
+      else                             { pct = 0;   cls = 'none';     label = 'Unknown'; }
+      html += makeProgressCard(name, pct, label, cls);
+    });
+    document.getElementById('kra-progress-grid').innerHTML = html;
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // CJM / Product Usage Data / Planhat KRAs — now backed by the
+  // dcs_rows table in Supabase. Every row (built-in or custom) is a
+  // real database row with a UUID; edits PATCH that row directly.
+  // ══════════════════════════════════════════════════════════════
+
+  // Debounced PATCH of a single dcs_rows row. Coalesces rapid edits to the
+  // SAME row into one request after 600ms of inactivity (own timer per row).
+  const dcsRowSaveTimers = {};
+  function patchDcsRow(rowId, partialFields) {
+    setDcsTableSync('loading', 'Saving…');
+    clearTimeout(dcsRowSaveTimers[rowId]);
+    dcsRowSaveTimers[rowId] = setTimeout(async () => {
+      try {
+        await dcsFetch(`dcs_rows?id=eq.${rowId}`, {
+          method: 'PATCH',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify(partialFields)
+        });
+        setDcsTableSync('live', 'Live · saved ' + new Date().toLocaleTimeString());
+      } catch (e) {
+        setDcsTableSync('error', 'Save failed — check connection');
+      }
+    }, 600);
+  }
+
+  async function createDcsRow(payload) {
+    setDcsTableSync('loading', 'Adding row…');
+    try {
+      const rows = await dcsFetch('dcs_rows', {
+        method: 'POST',
+        headers: { 'Prefer': 'return=representation' },
+        body: JSON.stringify(payload)
+      });
+      setDcsTableSync('live', 'Live · added ' + new Date().toLocaleTimeString());
+      return rows[0];
+    } catch (e) {
+      setDcsTableSync('error', 'Add failed — check connection');
+      return null;
+    }
+  }
+
+  async function deleteDcsRow(rowId) {
+    setDcsTableSync('loading', 'Deleting…');
+    try {
+      await dcsFetch(`dcs_rows?id=eq.${rowId}`, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+      setDcsTableSync('live', 'Live · deleted ' + new Date().toLocaleTimeString());
+    } catch (e) {
+      setDcsTableSync('error', 'Delete failed — check connection');
+    }
+  }
+
+  // Shared tiny sync indicator for the three table tabs (each tab shows its
+  // own dot/label in its header, all driven from this one function).
+  function setDcsTableSync(state, label) {
+    ['cjm', 'pud', 'kra'].forEach(scope => {
+      setSyncIndicator(`${scope}-sync-dot`, `${scope}-sync-label`, state, label);
+    });
+  }
+
+  let dcsRowsLoadedFor = { cjm: false, pud: false, kra: false };
+
+  async function loadDcsRows(scope) {
+    if (dcsRowsLoadedFor[scope]) return;
+    dcsRowsLoadedFor[scope] = true;
+    setDcsTableSync('loading', 'Connecting…');
+    try {
+      const rows = await dcsFetch(`dcs_rows?tab=eq.${scope}&order=sort_order.asc`);
+      renderDcsRows(scope, rows);
+      setDcsTableSync('live', 'Live · loaded ' + new Date().toLocaleTimeString());
+    } catch (e) {
+      setDcsTableSync('error', 'Could not load — check Supabase config');
+      renderDcsRows(scope, []);
+    }
+  }
+
+  function renderDcsRows(scope, rows) {
+    const tbody = document.getElementById(scope === 'pud' ? 'pud-body' : (scope + '-body'));
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    rows.forEach(row => {
+      if (scope === 'cjm') tbody.appendChild(buildCjmRowEl(row));
+      else if (scope === 'pud') tbody.appendChild(buildPudRowEl(row));
+      else if (scope === 'kra') tbody.appendChild(buildKraRowEl(row));
+    });
+    if (scope === 'cjm') updateCJMSummary();
+    if (scope === 'pud') updatePUDSummary();
+    if (scope === 'kra') updateKRASummary();
+  }
+
+  // Every field already autosaves to Supabase the moment it changes (debounced
+  // per-row). "Save Progress" is a reassurance action: it just confirms with
+  // the on-screen banner, since there's no separate local draft to flush.
+  function saveData() {
+    const st = document.getElementById('save-status');
+    st.classList.add('visible');
+    setTimeout(() => st.classList.remove('visible'), 2000);
+  }
+
+
+  // ── Nirali's Onboarding Progress — fully operational, synced to Supabase ──
+  const ONB_SUPABASE_URL  = "https://okczdushlbkbmxsqbtfo.supabase.co";
+  const ONB_SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rY3pkdXNobGJrYm14c3FidGZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxOTM5ODEsImV4cCI6MjA5NDc2OTk4MX0.m_xdB1JeDU0lK3N-kD79Th1tOmi7eaZOlCP6lSPHuZs";
+
+  const ONB_TASKS = {
+    week1: { label: "WEEK 1", color: "#F47920", days: "Days 1–5", title: "Introduction to Digital CS at SmartBear",
+      tasks: [
+        { label: "How Digital CS creates value for customers and the business", focus: "Value & Impact" },
+        { label: "The major focus areas of the Digital CS team", focus: "Team Structure" },
+        { label: "Key outcomes and success metrics", focus: "KPIs & Planning" },
+        { label: "How the team collaborates with other functions", focus: "Stakeholder Mapping" },
+      ]},
+    week2: { label: "WEEK 2", color: "#0F6E56", days: "Days 6–10", title: "SmartBear Tools and Resources",
+      tasks: [
+        { label: "Planhat", focus: "Customer Success Platform" },
+        { label: "Amplitude / Mixpanel and Other Data Integrations", focus: "Analytics & Data" },
+        { label: "CS Resources: Confluence", focus: "Knowledge Management" },
+        { label: "Salesforce", focus: "CRM & Customer Data" },
+      ]},
+    week3: { label: "WEEK 3", color: "#534AB7", days: "Days 11–15", title: "Product and Enablement Overview",
+      tasks: [
+        { label: "API Design and Testing", focus: "Technical Foundations" },
+        { label: "Test Management Basics", focus: "QA & Testing" },
+        { label: "SmartBear Product Offering", focus: "Product Knowledge" },
+        { label: "Relevant Enablement Sessions", focus: "Enablement" },
+      ]},
+  };
+
+  // Day 30–60 plan — Weeks 5–8 (rendered in its own grid, but shares the
+  // same toggle/sync mechanics as Weeks 1–3, keyed week5-0, week6-1, etc.)
+  const ONB_TASKS_30_60 = {
+    week5: { label: "WEEK 5", color: "#C0392B", days: "Days 31–35", title: "Swagger Onboarding & Adoption",
+      tasks: [
+        { label: "Planhat — Swagger Onboarding testing", focus: "Planhat" },
+        { label: "Planhat — Swagger Adoption playbook implementation", focus: "Planhat" },
+        { label: "Amplitude — Getting into training modules", focus: "Amplitude" },
+        { label: "Renewals training", focus: "Renewals" },
+      ]},
+    week6: { label: "WEEK 6", color: "#1F6FB2", days: "Days 36–40", title: "Swagger Success Planning & TestComplete Basics",
+      tasks: [
+        { label: "Swagger Success Planning implementation", focus: "Swagger" },
+        { label: "TestComplete Basics", focus: "TestComplete" },
+        { label: "TestComplete CJM", focus: "TestComplete" },
+      ]},
+    week7: { label: "WEEK 7", color: "#8E5DC2", days: "Days 41–45", title: "TestComplete Digital Journey",
+      tasks: [
+        { label: "TestComplete Digital Journey", focus: "TestComplete" },
+        { label: "TestComplete Digital Journey Planhat Implementation", focus: "Planhat" },
+        { label: "TestComplete Amplitude data", focus: "Amplitude" },
+      ]},
+    week8: { label: "WEEK 8", color: "#1A8A6B", days: "Days 46–50", title: "TestComplete Testing & QMetry Reporting",
+      tasks: [
+        { label: "TestComplete Digital Journey testing", focus: "TestComplete" },
+        { label: "QMetry Data in Amplitude (Dashboard Creation)", focus: "QMetry" },
+      ]},
+  };
+
+  const ONB_TOOLS = [
+    { name: "Salesforce", icon: "☁️", desc: "CRM & customer data" },
+    { name: "Amplitude",  icon: "📊", desc: "Product analytics" },
+    { name: "Planhat",    icon: "🎯", desc: "Customer success platform" },
+    { name: "Claude",     icon: "🤖", desc: "AI assistant & tooling" },
+    { name: "Zoom",       icon: "📹", desc: "Video conferencing" },
+  ];
+
+  // In-memory mirror of the Supabase row — mutated locally, then the whole
+  // object is written back on every change so neither column ever clobbers the other.
+  let onbLoaded = false;
+  let onbState = { progress: {}, timestamps: {}, toolAccess: {}, customTasks: [] };
+  let onbSaveTimer = null;
+  let onbCustomTasksColumnAvailable = true; // flips false if the migration hasn't been run yet
+
+  function setOnbSync(state, label) {
+    const dot = document.getElementById('onb-sync-dot');
+    const lbl = document.getElementById('onb-sync-label');
+    if (!dot || !lbl) return;
+    dot.className = 'onb-live-dot' + (state === 'live' ? '' : state === 'error' ? ' err' : ' stale');
+    lbl.textContent = label;
+  }
+
+  async function loadOnboardingData() {
+    if (onbLoaded) return;
+    onbLoaded = true;
+    setOnbSync('loading', 'Connecting…');
+    try {
+      const row = await onbFetchRow();
+      onbState.progress    = row.progress     || {};
+      onbState.timestamps  = row.timestamps   || {};
+      onbState.toolAccess  = row.tool_access  || {};
+      onbState.customTasks = row.custom_tasks || [];
+      renderOnboarding();
+      setOnbSync('live', row.updated_at ? ('Live · updated ' + new Date(row.updated_at).toLocaleString()) : 'Live');
+    } catch (e) {
+      setOnbSync('error', 'Could not load live data');
+      document.getElementById('onb-error-wrap').innerHTML =
+        `<div class="onb-error">⚠️ Couldn't reach the onboarding dashboard's database right now. ` +
+        `You can still view the live version directly: ` +
+        `<a href="https://pranav-bhatnagar19.github.io/digitalcsnewemployeeonboarding/" target="_blank" style="color:var(--red);font-weight:700;">open dashboard ↗</a></div>`;
+      renderOnboarding();
+    }
+  }
+
+  // Tries to select custom_tasks too; if that column doesn't exist yet
+  // (migration not run), retries without it so the dashboard still works.
+  async function onbFetchRow() {
+    const headers = { 'apikey': ONB_SUPABASE_ANON, 'Authorization': 'Bearer ' + ONB_SUPABASE_ANON };
+    let res = await fetch(`${ONB_SUPABASE_URL}/rest/v1/dcs_progress?id=eq.singleton&select=progress,timestamps,tool_access,custom_tasks,updated_at`, { headers });
+    if (!res.ok) {
+      onbCustomTasksColumnAvailable = false;
+      res = await fetch(`${ONB_SUPABASE_URL}/rest/v1/dcs_progress?id=eq.singleton&select=progress,timestamps,tool_access,updated_at`, { headers });
+    }
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const rows = await res.json();
+    const row = rows && rows[0] ? rows[0] : null;
+    if (!row) throw new Error('No data found');
+    return row;
+  }
+
+  // Returns ONB_TASKS merged with any custom tasks added via the Add Task form,
+  // grouped by week, in the same {label,color,days,title,tasks:[{label,focus,id?}]} shape.
+  function buildOnbWeeks(taskDict) {
+    const weeks = {};
+    Object.entries(taskDict).forEach(([wk, w]) => {
+      weeks[wk] = { ...w, tasks: w.tasks.map((t, i) => ({ ...t, key: wk + '-' + i, isCustom: false })) };
+    });
+    (onbState.customTasks || []).forEach(ct => {
+      if (!weeks[ct.week]) return;
+      weeks[ct.week].tasks.push({ label: ct.label, focus: ct.focus || 'Custom', key: ct.id, isCustom: true });
+    });
+    return weeks;
+  }
+
+  function getOnbWeeks() { return buildOnbWeeks(ONB_TASKS); }
+  function getOnb3060Weeks() { return buildOnbWeeks(ONB_TASKS_30_60); }
+
+  function allOnbKeys() {
+    const keys = [];
+    Object.values(getOnbWeeks()).forEach(w => w.tasks.forEach(t => keys.push(t.key)));
+    Object.values(getOnb3060Weeks()).forEach(w => w.tasks.forEach(t => keys.push(t.key)));
+    return keys;
+  }
+
+  // Debounced write-back of the full row (progress + timestamps + tool_access + custom_tasks together)
+  function scheduleOnbSave() {
+    setOnbSync('loading', 'Saving…');
+    clearTimeout(onbSaveTimer);
+    onbSaveTimer = setTimeout(async () => {
+      try {
+        const body = {
+          progress: onbState.progress,
+          timestamps: onbState.timestamps,
+          tool_access: onbState.toolAccess,
+          updated_at: new Date().toISOString()
+        };
+        if (onbCustomTasksColumnAvailable) body.custom_tasks = onbState.customTasks;
+        const res = await fetch(`${ONB_SUPABASE_URL}/rest/v1/dcs_progress?id=eq.singleton`, {
+          method: 'PATCH',
+          headers: {
+            'apikey': ONB_SUPABASE_ANON,
+            'Authorization': 'Bearer ' + ONB_SUPABASE_ANON,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        setOnbSync('live', 'Live · saved ' + new Date().toLocaleTimeString());
+      } catch (e) {
+        setOnbSync('error', 'Save failed — changes not synced');
+      }
+    }, 600);
+  }
+
+  function toggleOnbTask(key) {
+    const now = Date.now();
+    const wasDone = !!onbState.progress[key];
+    onbState.progress[key] = !wasDone;
+    if (!wasDone) {
+      const existing = onbState.timestamps[key] || {};
+      onbState.timestamps[key] = { ...existing, startedAt: existing.startedAt || now, completedAt: now };
+    } else {
+      onbState.timestamps[key] = { startedAt: (onbState.timestamps[key] || {}).startedAt || now, completedAt: null };
+    }
+    renderOnboarding();
+    scheduleOnbSave();
+  }
+
+  function setOnbToolStatus(toolName, value) {
+    onbState.toolAccess[toolName] = value;
+    renderOnboarding();
+    scheduleOnbSave();
+  }
+
+  // Adds a brand-new custom onboarding task to a given week, then persists it.
+  function addOnbCustomTask(week, label, focus) {
+    const id = 'custom-' + Date.now();
+    onbState.customTasks = onbState.customTasks || [];
+    onbState.customTasks.push({ id, week, label, focus: focus || 'Custom' });
+    renderOnboarding();
+    scheduleOnbSave();
+  }
+
+  // Removes a custom onboarding task (and its progress/timestamp data), then persists it.
+  // Confirmation happens at the button (inline two-step), not here.
+  function removeOnbCustomTask(id) {
+    onbState.customTasks = (onbState.customTasks || []).filter(ct => ct.id !== id);
+    delete onbState.progress[id];
+    delete onbState.timestamps[id];
+    renderOnboarding();
+    scheduleOnbSave();
+  }
+
+  // Renders a set of week cards (with clickable, syncing task lists) into a target grid element.
+  // startNum sets the displayed card number badge (1 for Weeks 1-3, 5 for Weeks 5-8, etc.)
+  function renderWeekCardsInto(weeks, gridId, startNum, progress) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+    grid.innerHTML = '';
+    Object.values(weeks).forEach((w, wi) => {
+      const card = document.createElement('div');
+      card.className = 'onb-week-card';
+      const hdr = document.createElement('div');
+      hdr.className = 'onb-week-card-hdr';
+      hdr.style.background = w.color;
+      hdr.innerHTML = `<span class="onb-week-num">${startNum + wi}</span>
+        <div>
+          <div class="onb-week-card-title">${w.title}</div>
+          <div class="onb-week-card-days">${w.days}</div>
+        </div>`;
+      const list = document.createElement('div');
+      list.className = 'onb-task-list';
+      w.tasks.forEach((task) => {
+        const isDone = !!progress[task.key];
+        const row = document.createElement('div');
+        row.className = 'onb-task-row' + (isDone ? ' done' : '');
+        const check = document.createElement('span');
+        check.className = 'onb-task-check';
+        if (isDone) { check.style.borderColor = w.color; check.style.background = w.color; check.textContent = '✓'; }
+        const label = document.createElement('span');
+        label.className = 'onb-task-label';
+        label.textContent = task.label;
+        label.style.cursor = 'pointer';
+        row.appendChild(check);
+        row.appendChild(label);
+        const clickToggle = () => toggleOnbTask(task.key);
+        check.style.cursor = 'pointer';
+        check.addEventListener('click', clickToggle);
+        label.addEventListener('click', clickToggle);
+        if (task.isCustom) {
+          const delBtn = buildDeleteButton(() => removeOnbCustomTask(task.key), 'Delete this task');
+          delBtn.style.marginLeft = 'auto';
+          row.appendChild(delBtn);
+        }
+        list.appendChild(row);
+      });
+      card.appendChild(hdr);
+      card.appendChild(list);
+      grid.appendChild(card);
+    });
+  }
+
+  function renderOnboarding() {
+    const progress = onbState.progress;
+    const toolAccess = onbState.toolAccess;
+    const keys = allOnbKeys();
+    const done = keys.filter(k => progress[k]).length;
+    const total = keys.length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+
+    // Stat cards
+    const statRow = document.getElementById('onb-stat-row');
+    const stats = [
+      [total, 'Total tasks', 'var(--charcoal)'],
+      [total - done, 'Remaining', 'var(--blue)'],
+      [done, 'Done', 'var(--green)'],
+    ];
+    statRow.innerHTML = stats.map(([v, l, c]) =>
+      `<div class="onb-stat-card"><div class="onb-stat-val" style="color:${c}">${v}</div><div class="onb-stat-lbl">${l}</div></div>`
+    ).join('');
+
+    // Overall progress bar
+    document.getElementById('onb-overall-pct').textContent = pct + '%';
+    document.getElementById('onb-overall-fill').style.width = pct + '%';
+
+    // Per-week bars (Weeks 1–3 only, to match the existing overview bar layout)
+    const weeks = getOnbWeeks();
+    const weekBars = document.getElementById('onb-week-bars');
+    weekBars.innerHTML = Object.values(weeks).map((w) => {
+      const wDone = w.tasks.filter(t => progress[t.key]).length;
+      const wPct = w.tasks.length ? Math.round((wDone / w.tasks.length) * 100) : 0;
+      return `<div class="onb-week-bar">
+        <div class="onb-week-bar-hdr" style="color:${w.color}">
+          <span>${w.label}</span><span class="onb-week-bar-count">${wDone}/${w.tasks.length}</span>
+        </div>
+        <div class="onb-pbar-bg" style="height:6px;"><div class="onb-pbar-fill" style="width:${wPct}%; background:${w.color};"></div></div>
+        <div class="onb-week-bar-pct" style="color:${w.color}">${wPct}%</div>
+      </div>`;
+    }).join('');
+
+    // Week cards with clickable task lists — Weeks 1–3
+    renderWeekCardsInto(weeks, 'onb-weeks-grid', 1, progress);
+
+    // Week cards with clickable task lists — Day 30–60 plan (Weeks 5–8)
+    renderWeekCardsInto(getOnb3060Weeks(), 'onb-weeks-grid-3060', 5, progress);
+
+    // Tools access — interactive dropdowns
+    const toolsGrid = document.getElementById('onb-tools-grid');
+    toolsGrid.innerHTML = '';
+    ONB_TOOLS.forEach(tool => {
+      const status = toolAccess[tool.name] || 'pending';
+      const granted = status === 'granted';
+      const card = document.createElement('div');
+      card.className = 'onb-tool-card';
+      const left = document.createElement('div');
+      left.style.display = 'flex';
+      left.style.alignItems = 'center';
+      left.style.gap = '12px';
+      left.innerHTML = `<span class="onb-tool-icon">${tool.icon}</span><span class="onb-tool-name">${tool.name}</span>`;
+      const sel = document.createElement('select');
+      sel.className = 'onb-tool-status-select ' + (granted ? 'granted' : 'pending');
+      sel.innerHTML = `<option value="pending"${!granted ? ' selected' : ''}>⏳ Pending</option><option value="granted"${granted ? ' selected' : ''}>✅ Granted</option>`;
+      sel.addEventListener('change', () => setOnbToolStatus(tool.name, sel.value));
+      card.appendChild(left);
+      card.appendChild(sel);
+      toolsGrid.appendChild(card);
+    });
+  }
+
+  // ── Add Task modal ─────────────────────────────────────────────
+  function openAddTaskModal() {
+    document.getElementById('add-task-overlay').classList.add('visible');
+    document.getElementById('add-task-name').value = '';
+    document.getElementById('add-task-focus').value = '';
+    document.getElementById('add-task-error').style.display = 'none';
+    onAddTaskCategoryChange();
+  }
+
+  function closeAddTaskModal() {
+    document.getElementById('add-task-overlay').classList.remove('visible');
+  }
+
+  function onAddTaskCategoryChange() {
+    const cat = document.getElementById('add-task-category').value;
+    document.getElementById('add-task-week-wrap').style.display   = (cat === 'onb') ? 'block' : 'none';
+    document.getElementById('add-task-focus-wrap').style.display  = (cat === 'onb') ? 'block' : 'none';
+    document.getElementById('add-task-raci-wrap').style.display   = (cat === 'kra') ? 'block' : 'none';
+    const nameLabel = document.getElementById('add-task-name-label');
+    const nameInput = document.getElementById('add-task-name');
+    if (cat === 'cjm' || cat === 'pud') {
+      nameLabel.textContent = 'Product name';
+      nameInput.placeholder = 'e.g. Reflect';
+    } else if (cat === 'kra') {
+      nameLabel.textContent = 'Workstream name';
+      nameInput.placeholder = 'e.g. WS13 Expansion Plays';
+    } else {
+      nameLabel.textContent = 'Task name';
+      nameInput.placeholder = 'e.g. Shadow a renewal call';
+    }
+  }
+
+  function submitAddTask() {
+    const cat = document.getElementById('add-task-category').value;
+    const name = document.getElementById('add-task-name').value.trim();
+    const errEl = document.getElementById('add-task-error');
+    if (!name) {
+      errEl.textContent = 'Please enter a name for the task.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+
+    if (cat === 'cjm')      addCjmRow(name);
+    else if (cat === 'pud') addPudRow(name);
+    else if (cat === 'kra') addKraRow(name, document.getElementById('add-task-raci').value);
+    else if (cat === 'onb') {
+      const week = document.getElementById('add-task-week').value;
+      const focus = document.getElementById('add-task-focus').value.trim();
+      addOnbCustomTask(week, name, focus);
+    }
+    closeAddTaskModal();
+  }
+
+  // Builds a fresh status <select> matching the dashboard's existing markup/behaviour
+  function buildEditableGeneric(initialText, placeholder, onSave) {
+    const div = document.createElement('div');
+    div.className = 'editable';
+    div.contentEditable = 'true';
+    div.setAttribute('data-placeholder', placeholder);
+    div.textContent = initialText || '';
+    div.classList.toggle('has-content', !!initialText);
+    div.addEventListener('input', debounce(() => {
+      div.classList.toggle('has-content', div.textContent.trim().length > 0);
+      onSave(div.textContent);
+    }, 600));
+    return div;
+  }
+
+  function buildDateInputGeneric(initialValue, onSave) {
+    const inp = document.createElement('input');
+    inp.type = 'date';
+    inp.value = initialValue || '';
+    inp.addEventListener('change', () => onSave(inp.value));
+    return inp;
+  }
+
+  function buildStatusSelectGeneric(initialValue, onSave) {
+    const sel = document.createElement('select');
+    sel.className = 'status-sel';
+    sel.innerHTML = `<option value="">— Select —</option>
+      <option value="completed">Completed</option>
+      <option value="in-progress">In Progress</option>
+      <option value="not-started">Not Started</option>`;
+    sel.value = initialValue || '';
+    const applyColor = () => {
+      sel.className = 'status-sel';
+      if (sel.value === 'completed') sel.classList.add('status-completed');
+      else if (sel.value === 'in-progress') sel.classList.add('status-in-progress');
+      else if (sel.value === 'not-started') sel.classList.add('status-not-started');
+      else sel.classList.add('status-empty');
+    };
+    applyColor();
+    sel.addEventListener('change', () => { applyColor(); onSave(sel.value); });
+    return sel;
+  }
+
+  // Makes a RACI badge (R / A/R) click-to-toggle between the two values, saving via onSave.
+  function makeRaciBadgeToggleable(badge, onSave) {
+    badge.style.cursor = 'pointer';
+    badge.title = 'Click to toggle R / A/R';
+    badge.addEventListener('click', () => {
+      const next = badge.textContent.trim() === 'R' ? 'A/R' : 'R';
+      badge.textContent = next;
+      badge.classList.toggle('raci-r', next === 'R');
+      badge.classList.toggle('raci-ar', next === 'A/R');
+      updateKRASummary();
+      onSave(next);
+    });
+  }
+
+  // Builds a delete button with an inline "click again to confirm" step.
+  // (Avoids window.confirm(), which browsers/sandboxed previews can silently block.)
+  function buildDeleteButton(onDelete, title) {
+    const btn = document.createElement('button');
+    btn.className = 'row-delete-btn';
+    btn.innerHTML = '🗑';
+    btn.title = title || 'Delete';
+    btn.type = 'button';
+    let confirming = false;
+    let resetTimer = null;
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!confirming) {
+        confirming = true;
+        btn.innerHTML = '✓ Confirm';
+        btn.classList.add('confirming');
+        resetTimer = setTimeout(() => {
+          confirming = false;
+          btn.innerHTML = '🗑';
+          btn.classList.remove('confirming');
+        }, 3000);
+      } else {
+        clearTimeout(resetTimer);
+        onDelete();
+      }
+    });
+    return btn;
+  }
+
+  // ── Row element builders — one per tab, each backed by a real dcs_rows UUID ──
+
+  function buildCjmRowEl(row) {
+    const tr = document.createElement('tr');
+    tr.dataset.rowId = row.id;
+    const f = row.fields || {};
+
+    const tdName = document.createElement('td');
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'product-name';
+    nameDiv.contentEditable = 'true';
+    nameDiv.textContent = row.name || '';
+    nameDiv.addEventListener('input', debounce(() => patchDcsRow(row.id, { name: nameDiv.textContent.trim() }), 600));
+    tdName.appendChild(nameDiv);
+    tr.appendChild(tdName);
+
+    [['cjm','cjm'], ['playbook','playbook'], ['planhat','planhat']].forEach(([fieldKey]) => {
+      const td = document.createElement('td');
+      td.appendChild(buildStatusSelectGeneric(f[fieldKey], (val) => {
+        const newFields = { ...f, [fieldKey]: val };
+        patchDcsRow(row.id, { fields: newFields });
+        row.fields = newFields;
+        updateCJMSummary();
+      }));
+      tr.appendChild(td);
+    });
+
+    const tdDate = document.createElement('td');
+    tdDate.appendChild(buildDateInputGeneric(row.target_date, (val) => patchDcsRow(row.id, { target_date: val || null })));
+    tr.appendChild(tdDate);
+
+    const tdNext = document.createElement('td');
+    tdNext.appendChild(buildEditableGeneric(row.next_steps, 'Add next steps…', (val) => patchDcsRow(row.id, { next_steps: val })));
+    tr.appendChild(tdNext);
+
+    const tdBlockers = document.createElement('td');
+    tdBlockers.appendChild(buildEditableGeneric(row.blockers, 'Add blockers…', (val) => patchDcsRow(row.id, { blockers: val })));
+    tr.appendChild(tdBlockers);
+
+    const tdActions = document.createElement('td');
+    tdActions.appendChild(buildDeleteButton(async () => {
+      tr.remove();
+      updateCJMSummary();
+      await deleteDcsRow(row.id);
+    }, 'Delete this row'));
+    tr.appendChild(tdActions);
+
+    return tr;
+  }
+
+  function buildPudRowEl(row) {
+    const tr = document.createElement('tr');
+    tr.dataset.rowId = row.id;
+    const f = row.fields || {};
+
+    const tdName = document.createElement('td');
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'product-name';
+    nameDiv.contentEditable = 'true';
+    nameDiv.textContent = row.name || '';
+    nameDiv.addEventListener('input', debounce(() => patchDcsRow(row.id, { name: nameDiv.textContent.trim() }), 600));
+    tdName.appendChild(nameDiv);
+    tr.appendChild(tdName);
+
+    const tdSource = document.createElement('td');
+    tdSource.appendChild(buildEditableGeneric(f.data_source, 'Data source…', (val) => {
+      const newFields = { ...row.fields, data_source: val };
+      row.fields = newFields;
+      patchDcsRow(row.id, { fields: newFields });
+    }));
+    tr.appendChild(tdSource);
+
+    const tdYn = document.createElement('td');
+    const ynSel = document.createElement('select');
+    ynSel.className = 'yn-sel';
+    ynSel.innerHTML = `<option value="">— Select —</option><option value="yes">Yes</option><option value="no">No</option>`;
+    ynSel.value = f.in_amplitude || '';
+    const applyYn = () => updateYN(ynSel);
+    applyYn();
+    ynSel.addEventListener('change', () => {
+      applyYn();
+      const newFields = { ...row.fields, in_amplitude: ynSel.value };
+      row.fields = newFields;
+      patchDcsRow(row.id, { fields: newFields });
+      updatePUDSummary();
+    });
+    tdYn.appendChild(ynSel);
+    tr.appendChild(tdYn);
+
+    const tdNext = document.createElement('td');
+    tdNext.appendChild(buildEditableGeneric(row.next_steps, 'Add next steps…', (val) => patchDcsRow(row.id, { next_steps: val })));
+    tr.appendChild(tdNext);
+
+    const tdBlockers = document.createElement('td');
+    tdBlockers.appendChild(buildEditableGeneric(row.blockers, 'Add blockers…', (val) => patchDcsRow(row.id, { blockers: val })));
+    tr.appendChild(tdBlockers);
+
+    const tdActions = document.createElement('td');
+    tdActions.appendChild(buildDeleteButton(async () => {
+      tr.remove();
+      updatePUDSummary();
+      await deleteDcsRow(row.id);
+    }, 'Delete this row'));
+    tr.appendChild(tdActions);
+
+    return tr;
+  }
+
+  function buildKraRowEl(row) {
+    const tr = document.createElement('tr');
+    tr.dataset.rowId = row.id;
+    const f = row.fields || {};
+
+    const tdName = document.createElement('td');
+    const idSpan = document.createElement('span');
+    idSpan.className = 'ws-id';
+    idSpan.textContent = row.ws_id || (row.is_custom ? 'Custom' : '');
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'ws-name';
+    nameDiv.contentEditable = 'true';
+    nameDiv.textContent = row.name || '';
+    nameDiv.addEventListener('input', debounce(() => patchDcsRow(row.id, { name: nameDiv.textContent.trim() }), 600));
+    tdName.appendChild(idSpan);
+    tdName.appendChild(nameDiv);
+    tr.appendChild(tdName);
+
+    const tdRaci = document.createElement('td');
+    const badge = document.createElement('span');
+    const raciVal = f.raci || 'R';
+    badge.className = 'raci-badge ' + (raciVal === 'A/R' ? 'raci-ar' : 'raci-r');
+    badge.textContent = raciVal;
+    makeRaciBadgeToggleable(badge, (newRaci) => {
+      const newFields = { ...row.fields, raci: newRaci };
+      row.fields = newFields;
+      patchDcsRow(row.id, { fields: newFields });
+    });
+    tdRaci.appendChild(badge);
+    tr.appendChild(tdRaci);
+
+    const tdStatus = document.createElement('td');
+    tdStatus.appendChild(buildStatusSelectGeneric(f.status, (val) => {
+      const newFields = { ...row.fields, status: val };
+      row.fields = newFields;
+      patchDcsRow(row.id, { fields: newFields });
+      updateKRASummary();
+    }));
+    tr.appendChild(tdStatus);
+
+    const tdDate = document.createElement('td');
+    tdDate.appendChild(buildDateInputGeneric(row.target_date, (val) => patchDcsRow(row.id, { target_date: val || null })));
+    tr.appendChild(tdDate);
+
+    const tdNext = document.createElement('td');
+    tdNext.appendChild(buildEditableGeneric(row.next_steps, 'Add next steps…', (val) => patchDcsRow(row.id, { next_steps: val })));
+    tr.appendChild(tdNext);
+
+    const tdBlockers = document.createElement('td');
+    tdBlockers.appendChild(buildEditableGeneric(row.blockers, 'Add blockers…', (val) => patchDcsRow(row.id, { blockers: val })));
+    tr.appendChild(tdBlockers);
+
+    const tdActions = document.createElement('td');
+    tdActions.appendChild(buildDeleteButton(async () => {
+      tr.remove();
+      updateKRASummary();
+      await deleteDcsRow(row.id);
+    }, 'Delete this row'));
+    tr.appendChild(tdActions);
+
+    return tr;
+  }
+
+  // ── Create a new row via the "+ Add Task" form ──
+  async function addCjmRow(productName) {
+    const row = await createDcsRow({ tab: 'cjm', name: productName, is_custom: true, fields: { cjm: '', playbook: '', planhat: '' } });
+    if (!row) return;
+    document.getElementById('cjm-body').appendChild(buildCjmRowEl(row));
+    updateCJMSummary();
+  }
+
+  async function addPudRow(productName) {
+    const row = await createDcsRow({ tab: 'pud', name: productName, is_custom: true, fields: { data_source: '', in_amplitude: '' } });
+    if (!row) return;
+    document.getElementById('pud-body').appendChild(buildPudRowEl(row));
+    updatePUDSummary();
+  }
+
+  async function addKraRow(wsName, raci) {
+    const row = await createDcsRow({ tab: 'kra', name: wsName, is_custom: true, fields: { raci: raci || 'R', status: '' } });
+    if (!row) return;
+    document.getElementById('kra-body').appendChild(buildKraRowEl(row));
+    updateKRASummary();
+  }
+
+  // ── Project/ Tasks — access controlled by the database itself ──
+  // (dcs_team_members.can_access_project_tasks, enforced via RLS).
+  // The old separate PIN is gone: the real boundary is now in Postgres,
+  // not a second client-side secret that duplicated the main login.
+  let projSelectedColor = 'yellow';
+  let projTasksCache = []; // in-memory mirror of dcs_project_tasks, refreshed on unlock
+  let projTasksLoaded = false;
+
+  function checkProjAccess() {
+    const allowed = !!(dcsCurrentMember && dcsCurrentMember.can_access_project_tasks);
+    if (allowed) {
+      document.getElementById('proj-lock').style.display = 'none';
+      document.getElementById('proj-board').style.display = 'block';
+      loadProjTasks().then(() => renderProjActiveView());
+    } else {
+      document.getElementById('proj-lock').style.display = 'flex';
+      document.getElementById('proj-board').style.display = 'none';
+    }
+  }
+
+  // Fetches all tasks from Supabase into projTasksCache (only refetches once per
+  // unlock; individual edits below update the cache + database together so the
+  // UI never needs a full refetch just to reflect its own change).
+  async function loadProjTasks() {
+    if (projTasksLoaded) return projTasksCache;
+    projTasksLoaded = true;
+    try {
+      projTasksCache = await dcsFetch('dcs_project_tasks?order=created_at.asc');
+    } catch (e) {
+      projTasksCache = [];
+    }
+    return projTasksCache;
+  }
+
+  // Debounced PATCH of one task's fields — coalesces rapid edits to the same task.
+  const projTaskSaveTimers = {};
+  function patchProjTask(taskId, partialFields) {
+    clearTimeout(projTaskSaveTimers[taskId]);
+    projTaskSaveTimers[taskId] = setTimeout(() => {
+      dcsFetch(`dcs_project_tasks?id=eq.${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify(partialFields)
+      }).catch(() => { /* swallow — next edit will retry with current values */ });
+    }, 600);
+  }
+
+  function openProjAddTaskModal(prefillDate) {
+    document.getElementById('proj-task-overlay').classList.add('visible');
+    document.getElementById('proj-task-title').value = '';
+    document.getElementById('proj-task-project').value = '';
+    document.getElementById('proj-task-assignee').value = 'Pranav';
+    document.getElementById('proj-task-desc').value = '';
+    document.getElementById('proj-task-start').value = prefillDate || '';
+    document.getElementById('proj-task-due').value = prefillDate || '';
+    document.getElementById('proj-task-status').value = 'not-started';
+    document.getElementById('proj-task-error').style.display = 'none';
+    projSelectedColor = 'yellow';
+    document.querySelectorAll('#proj-color-picker .proj-color-dot').forEach(d => {
+      d.classList.toggle('selected', d.dataset.color === projSelectedColor);
+    });
+    refreshProjKnownProjects();
+  }
+
+  // Populates the <datalist> with project names already used on other tasks, for autocomplete
+  function refreshProjKnownProjects() {
+    const names = [...new Set(projTasksCache.map(t => t.project).filter(Boolean))];
+    const dl = document.getElementById('proj-known-projects');
+    dl.innerHTML = names.map(n => `<option value="${n.replace(/"/g, '&quot;')}">`).join('');
+  }
+
+  function closeProjAddTaskModal() {
+    document.getElementById('proj-task-overlay').classList.remove('visible');
+  }
+
+  document.querySelectorAll('#proj-color-picker .proj-color-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      projSelectedColor = dot.dataset.color;
+      document.querySelectorAll('#proj-color-picker .proj-color-dot').forEach(d => d.classList.remove('selected'));
+      dot.classList.add('selected');
+    });
+  });
+
+  async function submitProjTask() {
+    const title = document.getElementById('proj-task-title').value.trim();
+    const errEl = document.getElementById('proj-task-error');
+    if (!title) {
+      errEl.textContent = 'Please enter a task title.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    const status = document.getElementById('proj-task-status').value;
+    const payload = {
+      title,
+      project: document.getElementById('proj-task-project').value.trim(),
+      assignee: document.getElementById('proj-task-assignee').value,
+      description: document.getElementById('proj-task-desc').value.trim(),
+      start_date: document.getElementById('proj-task-start').value || null,
+      due_date: document.getElementById('proj-task-due').value || null,
+      status,
+      color: projSelectedColor,
+      tilt: Number((Math.random() * 2.4 - 1.2).toFixed(2)),
+      archived: status === 'completed',
+      archived_at: status === 'completed' ? new Date().toISOString() : null
+    };
+    try {
+      const created = await dcsFetch('dcs_project_tasks', {
+        method: 'POST',
+        headers: { 'Prefer': 'return=representation' },
+        body: JSON.stringify(payload)
+      });
+      projTasksCache.push(created[0]);
+      closeProjAddTaskModal();
+      renderProjActiveView();
+      if (status === 'completed') showArchiveToast(title);
+    } catch (e) {
+      errEl.textContent = 'Could not save — check Supabase connection.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  function deleteProjTask(id) {
+    projTasksCache = projTasksCache.filter(t => t.id !== id);
+    renderProjActiveView();
+    dcsFetch(`dcs_project_tasks?id=eq.${id}`, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } })
+      .catch(() => { /* task already removed from view; ignore */ });
+  }
+
+  function cycleProjTaskStatus(id) {
+    const order = ['not-started', 'in-progress', 'completed'];
+    const t = projTasksCache.find(t => t.id === id);
+    if (!t) return;
+    const next = order[(order.indexOf(t.status) + 1) % order.length];
+    t.status = next;
+    if (next === 'completed') {
+      // Auto-archive the moment a task is marked Completed — it drops off
+      // Board/Calendar immediately and moves into the Archive view.
+      t.archived = true;
+      t.archived_at = new Date().toISOString();
+      patchProjTask(id, { status: next, archived: true, archived_at: t.archived_at });
+      showArchiveToast(t.title);
+    } else {
+      patchProjTask(id, { status: next });
+    }
+    renderProjActiveView();
+  }
+
+  // Small transient confirmation when a task auto-archives, so it doesn't feel
+  // like it just vanished — tells you where it went and offers a quick undo.
+  function showArchiveToast(taskTitle) {
+    const existing = document.getElementById('archive-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.id = 'archive-toast';
+    toast.className = 'archive-toast';
+    toast.innerHTML = `<span>✅ "${taskTitle}" completed — moved to Archive</span>`;
+    const viewBtn = document.createElement('button');
+    viewBtn.textContent = 'View Archive';
+    viewBtn.addEventListener('click', () => { setProjView('archive'); toast.remove(); });
+    toast.appendChild(viewBtn);
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+  }
+
+  // Moves a task back out of the archive into active Board/Calendar views.
+  function unarchiveProjTask(id) {
+    const t = projTasksCache.find(t => t.id === id);
+    if (!t) return;
+    t.archived = false;
+    t.archived_at = null;
+    t.status = 'in-progress'; // back to active; "completed" + not-archived would look odd on the board
+    patchProjTask(id, { archived: false, archived_at: null, status: 'in-progress' });
+    renderProjActiveView();
+  }
+
+  const PROJ_STATUS_LABEL = { 'not-started': '⏳ Not Started', 'in-progress': '🔧 In Progress', 'completed': '✅ Completed' };
+  const PROJ_COLOR_HEX = {
+    yellow: '#FFE680', orange: '#FFC089', pink: '#FFB3C6',
+    green: '#B8E8C8', blue: '#AFD8F0', purple: '#D6C2EE'
+  };
+
+  function formatProjDate(d) {
+    if (!d) return '';
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+
+  function renderProjBoard() {
+    const tasks = projTasksCache.filter(t => !t.archived);
+    const grid = document.getElementById('proj-board-grid');
+    const empty = document.getElementById('proj-empty');
+    grid.innerHTML = '';
+    empty.style.display = tasks.length ? 'none' : 'block';
+
+    tasks.forEach(task => {
+      const note = document.createElement('div');
+      note.className = 'sticky-note';
+      note.style.background = PROJ_COLOR_HEX[task.color] || PROJ_COLOR_HEX.yellow;
+      note.style.setProperty('--tilt', (task.tilt || -0.6) + 'deg');
+
+      const topRow = document.createElement('div');
+      topRow.className = 'sticky-note-toprow';
+
+      const projTag = document.createElement('div');
+      projTag.className = 'sticky-note-project';
+      projTag.contentEditable = 'true';
+      projTag.textContent = task.project || '';
+      projTag.setAttribute('data-placeholder', '+ project');
+      projTag.addEventListener('input', debounce(() => {
+        task.project = projTag.textContent.trim();
+        patchProjTask(task.id, { project: task.project });
+      }, 600));
+      topRow.appendChild(projTag);
+
+      const assigneeChip = document.createElement('button');
+      assigneeChip.className = 'sticky-note-assignee';
+      assigneeChip.type = 'button';
+      assigneeChip.title = 'Click to reassign';
+      assigneeChip.textContent = '👤 ' + (task.assignee || 'Pranav');
+      assigneeChip.addEventListener('click', () => {
+        const next = (task.assignee === 'Nirali') ? 'Pranav' : 'Nirali';
+        task.assignee = next;
+        patchProjTask(task.id, { assignee: next });
+        assigneeChip.textContent = '👤 ' + next;
+      });
+      topRow.appendChild(assigneeChip);
+
+      note.appendChild(topRow);
+
+      const title = document.createElement('div');
+      title.className = 'sticky-note-title';
+      title.contentEditable = 'true';
+      title.textContent = task.title;
+      title.addEventListener('input', debounce(() => {
+        task.title = title.textContent.trim();
+        patchProjTask(task.id, { title: task.title });
+      }, 600));
+      note.appendChild(title);
+
+      const desc = document.createElement('div');
+      desc.className = 'sticky-note-desc';
+      desc.contentEditable = 'true';
+      desc.textContent = task.description || '';
+      desc.setAttribute('data-placeholder', 'Add a description…');
+      desc.addEventListener('input', debounce(() => {
+        task.description = desc.textContent.trim();
+        patchProjTask(task.id, { description: task.description });
+      }, 600));
+      note.appendChild(desc);
+
+      const meta = document.createElement('div');
+      meta.className = 'sticky-note-meta';
+      meta.title = 'Click to edit dates';
+      meta.style.cursor = 'pointer';
+      const renderMetaText = () => {
+        const startTxt = task.start_date ? formatProjDate(task.start_date) : '?';
+        const dueTxt = task.due_date ? formatProjDate(task.due_date) : '?';
+        meta.innerHTML = `🗓 <span>${startTxt} → ${dueTxt}</span>`;
+      };
+      renderMetaText();
+      meta.addEventListener('click', (e) => {
+        if (e.target.tagName === 'INPUT') return;
+        meta.innerHTML = '';
+        const startInp = document.createElement('input');
+        startInp.type = 'date'; startInp.value = task.start_date || ''; startInp.className = 'proj-inline-date';
+        const dueInp = document.createElement('input');
+        dueInp.type = 'date'; dueInp.value = task.due_date || ''; dueInp.className = 'proj-inline-date';
+        const saveDates = () => {
+          task.start_date = startInp.value || null;
+          task.due_date = dueInp.value || null;
+          patchProjTask(task.id, { start_date: task.start_date, due_date: task.due_date });
+          renderMetaText();
+        };
+        startInp.addEventListener('change', saveDates);
+        dueInp.addEventListener('change', saveDates);
+        meta.appendChild(startInp);
+        meta.appendChild(document.createTextNode(' → '));
+        meta.appendChild(dueInp);
+        startInp.focus();
+      });
+      note.appendChild(meta);
+
+      const actions = document.createElement('div');
+      actions.className = 'sticky-note-actions';
+      const statusBtn = document.createElement('button');
+      statusBtn.className = 'sticky-note-status';
+      statusBtn.textContent = PROJ_STATUS_LABEL[task.status] || PROJ_STATUS_LABEL['not-started'];
+      statusBtn.title = 'Click to advance status';
+      statusBtn.addEventListener('click', () => cycleProjTaskStatus(task.id));
+      const delBtn = buildDeleteButton(() => deleteProjTask(task.id), 'Delete this task');
+      actions.appendChild(statusBtn);
+      actions.appendChild(delBtn);
+      note.appendChild(actions);
+
+      grid.appendChild(note);
+    });
+  }
+
+  // ── Board / Calendar view toggle ──────────────────────────────
+  let projCurrentView = 'board';
+
+  function setProjView(view) {
+    projCurrentView = view;
+    document.querySelectorAll('#proj-view-toggle .proj-view-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.view === view);
+    });
+    document.getElementById('proj-view-board').style.display = (view === 'board') ? 'block' : 'none';
+    document.getElementById('proj-view-calendar').style.display = (view === 'calendar') ? 'block' : 'none';
+    document.getElementById('proj-view-archive').style.display = (view === 'archive') ? 'block' : 'none';
+    renderProjActiveView();
+  }
+
+  function renderProjActiveView() {
+    if (projCurrentView === 'calendar') renderProjCalendar();
+    else if (projCurrentView === 'archive') renderProjArchive();
+    else renderProjBoard();
+  }
+
+  // ── Archive — completed tasks land here automatically ──────────
+  function renderProjArchive() {
+    const tasks = projTasksCache.filter(t => t.archived).sort((a, b) => {
+      // Most recently archived first
+      return new Date(b.archived_at || b.updated_at || 0) - new Date(a.archived_at || a.updated_at || 0);
+    });
+    const grid = document.getElementById('proj-archive-grid');
+    const empty = document.getElementById('proj-archive-empty');
+    grid.innerHTML = '';
+    empty.style.display = tasks.length ? 'none' : 'block';
+
+    tasks.forEach(task => {
+      const note = document.createElement('div');
+      note.className = 'sticky-note archive-card';
+      note.style.background = PROJ_COLOR_HEX[task.color] || PROJ_COLOR_HEX.yellow;
+      note.style.setProperty('--tilt', (task.tilt || -0.6) + 'deg');
+
+      const topRow = document.createElement('div');
+      topRow.className = 'sticky-note-toprow';
+      const projTag = document.createElement('div');
+      projTag.className = 'sticky-note-project';
+      projTag.textContent = task.project || '';
+      topRow.appendChild(projTag);
+      const assigneeTag = document.createElement('div');
+      assigneeTag.className = 'sticky-note-assignee';
+      assigneeTag.style.cursor = 'default';
+      assigneeTag.textContent = '👤 ' + (task.assignee || 'Pranav');
+      topRow.appendChild(assigneeTag);
+      note.appendChild(topRow);
+
+      const title = document.createElement('div');
+      title.className = 'sticky-note-title';
+      title.textContent = task.title;
+      note.appendChild(title);
+
+      if (task.description) {
+        const desc = document.createElement('div');
+        desc.className = 'sticky-note-desc';
+        desc.textContent = task.description;
+        note.appendChild(desc);
+      }
+
+      const meta = document.createElement('div');
+      meta.className = 'sticky-note-meta';
+      const archivedTxt = task.archived_at ? formatProjDate(task.archived_at.slice(0, 10)) : '';
+      meta.innerHTML = `✅ Completed${archivedTxt ? ' · archived ' + archivedTxt : ''}`;
+      note.appendChild(meta);
+
+      const actions = document.createElement('div');
+      actions.className = 'sticky-note-actions';
+      const unarchiveBtn = document.createElement('button');
+      unarchiveBtn.className = 'unarchive-btn';
+      unarchiveBtn.textContent = '↩ Unarchive';
+      unarchiveBtn.addEventListener('click', () => unarchiveProjTask(task.id));
+      const delBtn = buildDeleteButton(() => deleteProjTask(task.id), 'Permanently delete this task');
+      actions.appendChild(unarchiveBtn);
+      actions.appendChild(delBtn);
+      note.appendChild(actions);
+
+      grid.appendChild(note);
+    });
+  }
+
+  // ── Weekly calendar ────────────────────────────────────────────
+  let projWeekOffset = 0; // 0 = the week containing today
+
+  function shiftProjWeek(delta) {
+    projWeekOffset = (delta === 0) ? 0 : projWeekOffset + delta;
+    renderProjCalendar();
+  }
+
+  // Returns the Monday of the week, offset by N weeks from this week's Monday
+  function getProjWeekStart(offset) {
+    const now = new Date();
+    const day = now.getDay(); // 0 = Sun
+    const diffToMonday = (day === 0) ? -6 : 1 - day;
+    const monday = new Date(now);
+    monday.setDate(now.getDate() + diffToMonday + offset * 7);
+    monday.setHours(0, 0, 0, 0);
+    return monday;
+  }
+
+  function toISODate(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function renderProjCalendar() {
+    const weekStart = getProjWeekStart(projWeekOffset);
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(weekStart);
+      d.setDate(weekStart.getDate() + i);
+      days.push(d);
+    }
+    const todayISO = toISODate(new Date());
+
+    const rangeLabel = `${days[0].toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} – ${days[6].toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+    document.getElementById('proj-cal-range').textContent = rangeLabel;
+
+    const tasks = projTasksCache.filter(t => !t.archived);
+    const grid = document.getElementById('proj-cal-grid');
+    grid.innerHTML = '';
+
+    days.forEach(d => {
+      const iso = toISODate(d);
+      const dayEl = document.createElement('div');
+      dayEl.className = 'proj-cal-day' + (iso === todayISO ? ' today' : '');
+
+      const hdr = document.createElement('div');
+      hdr.className = 'proj-cal-day-hdr';
+      hdr.textContent = d.toLocaleDateString('en-GB', { weekday: 'short' });
+      const num = document.createElement('div');
+      num.className = 'proj-cal-day-num';
+      num.textContent = d.getDate();
+      dayEl.appendChild(hdr);
+      dayEl.appendChild(num);
+
+      const notesWrap = document.createElement('div');
+      notesWrap.className = 'proj-cal-day-notes';
+
+      // A task appears on this day if its start date matches, or (if no start)
+      // its due date matches, or (if neither) — it just won't appear on the calendar.
+      tasks.filter(t => (t.start_date || t.due_date) === iso).forEach(task => {
+        const note = document.createElement('div');
+        note.className = 'cal-note';
+        note.style.background = PROJ_COLOR_HEX[task.color] || PROJ_COLOR_HEX.yellow;
+
+        if (task.project) {
+          const pTag = document.createElement('div');
+          pTag.className = 'cal-note-project';
+          pTag.textContent = task.project;
+          note.appendChild(pTag);
+        }
+        const tTitle = document.createElement('div');
+        tTitle.className = 'cal-note-title';
+        tTitle.textContent = task.title;
+        note.appendChild(tTitle);
+
+        const assigneeBadge = document.createElement('div');
+        assigneeBadge.className = 'cal-note-assignee';
+        assigneeBadge.textContent = '👤 ' + (task.assignee || 'Pranav');
+        note.appendChild(assigneeBadge);
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'cal-note-del';
+        delBtn.innerHTML = '✕';
+        delBtn.title = 'Delete this task';
+        delBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteProjTask(task.id);
+        });
+        note.appendChild(delBtn);
+
+        // Clicking the note (not the delete x) jumps to Board view for full editing
+        note.addEventListener('click', (e) => {
+          if (e.target === delBtn) return;
+          setProjView('board');
+        });
+
+        notesWrap.appendChild(note);
+      });
+
+      dayEl.appendChild(notesWrap);
+
+      const addBtn = document.createElement('button');
+      addBtn.className = 'proj-cal-add-btn';
+      addBtn.textContent = '＋ add';
+      addBtn.addEventListener('click', () => openProjAddTaskModal(iso));
+      dayEl.appendChild(addBtn);
+
+      grid.appendChild(dayEl);
+    });
+  }
+
+
+  // ══════════════════════════════════════════════════════════════
+  // Custom Tabs — generic, user-defined table tabs ("+ New Tab")
+  // Now backed by dcs_custom_tabs (one row per tab definition) and
+  // dcs_custom_tab_rows (one row per table row inside that tab).
+  // ══════════════════════════════════════════════════════════════
+  const COL_TYPE_LABEL = { text: 'Text', status: 'Status', date: 'Date', textarea: 'Long text' };
+  let newTabColCount = 0;
+
+  // In-memory cache of {id -> {id, icon, name, columns, sort_order}} so we don't
+  // refetch the definition on every keystroke; rows are fetched/rendered separately.
+  let customTabDefsCache = {};
+
+  async function fetchCustomTabDefs() {
+    return await dcsFetch('dcs_custom_tabs?order=sort_order.asc');
+  }
+
+  async function fetchCustomTabRows(tabId) {
+    return await dcsFetch(`dcs_custom_tab_rows?tab_id=eq.${tabId}&order=sort_order.asc`);
+  }
+
+  function openNewTabModal() {
+    document.getElementById('new-tab-overlay').classList.add('visible');
+    document.getElementById('new-tab-icon').value = '📁';
+    document.getElementById('new-tab-name').value = '';
+    document.getElementById('new-tab-error').style.display = 'none';
+    document.getElementById('new-tab-columns').innerHTML = '';
+    newTabColCount = 0;
+    // Seed with two sensible default columns to start from
+    addNewTabColumnRow('Item', 'text');
+    addNewTabColumnRow('Status', 'status');
+    addNewTabColumnRow('Notes', 'textarea');
+  }
+
+  function closeNewTabModal() {
+    document.getElementById('new-tab-overlay').classList.remove('visible');
+  }
+
+  function addNewTabColumnRow(prefillName, prefillType) {
+    newTabColCount++;
+    const wrap = document.getElementById('new-tab-columns');
+    const row = document.createElement('div');
+    row.className = 'new-tab-col-row';
+    const nameInp = document.createElement('input');
+    nameInp.type = 'text';
+    nameInp.placeholder = 'Column name';
+    nameInp.value = prefillName || '';
+    const typeSel = document.createElement('select');
+    typeSel.innerHTML = Object.entries(COL_TYPE_LABEL).map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+    if (prefillType) typeSel.value = prefillType;
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'new-tab-col-remove';
+    removeBtn.type = 'button';
+    removeBtn.innerHTML = '✕';
+    removeBtn.addEventListener('click', () => row.remove());
+    row.appendChild(nameInp);
+    row.appendChild(typeSel);
+    row.appendChild(removeBtn);
+    wrap.appendChild(row);
+  }
+
+  async function submitNewTab() {
+    const icon = document.getElementById('new-tab-icon').value.trim() || '📁';
+    const name = document.getElementById('new-tab-name').value.trim();
+    const errEl = document.getElementById('new-tab-error');
+    if (!name) {
+      errEl.textContent = 'Please give the tab a name.';
+      errEl.style.display = 'block';
+      return;
+    }
+    const colRows = document.querySelectorAll('#new-tab-columns .new-tab-col-row');
+    const columns = [];
+    colRows.forEach(row => {
+      const inp = row.querySelector('input[type=text]');
+      const sel = row.querySelector('select');
+      const colName = inp.value.trim();
+      if (colName) columns.push({ name: colName, type: sel.value });
+    });
+    if (!columns.length) {
+      errEl.textContent = 'Add at least one column.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+
+    try {
+      const sortOrder = Object.keys(customTabDefsCache).length;
+      const created = await dcsFetch('dcs_custom_tabs', {
+        method: 'POST',
+        headers: { 'Prefer': 'return=representation' },
+        body: JSON.stringify({ icon, name, columns, sort_order: sortOrder })
+      });
+      const tabDef = { ...created[0], rows: [] };
+      customTabDefsCache[tabDef.id] = tabDef;
+      addCustomTabButtonAndPanel(tabDef);
+      closeNewTabModal();
+      switchTab(tabDef.id, document.querySelector(`.tab-btn[data-custom-id="${tabDef.id}"]`));
+    } catch (e) {
+      errEl.textContent = 'Could not create tab — check Supabase connection.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  // Builds the nav button + panel DOM for one custom tab definition, and wires it up.
+  function addCustomTabButtonAndPanel(tabDef) {
+    customTabDefsCache[tabDef.id] = tabDef;
+
+    // Nav button — wrapped so a small delete "x" can sit on it
+    const btnWrap = document.createElement('span');
+    btnWrap.className = 'tab-btn-wrap';
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn';
+    btn.dataset.customId = tabDef.id;
+    btn.textContent = `${tabDef.icon} ${tabDef.name}`;
+    btn.addEventListener('click', () => switchTab(tabDef.id, btn));
+    const navDelBtn = buildDeleteButton(() => deleteCustomTab(tabDef.id), 'Delete this tab');
+    navDelBtn.classList.add('tab-btn-delete');
+    btnWrap.appendChild(btn);
+    btnWrap.appendChild(navDelBtn);
+    document.getElementById('custom-tab-buttons').appendChild(btnWrap);
+
+    // Panel
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+    panel.id = 'tab-' + tabDef.id;
+
+    const hdr = document.createElement('div');
+    hdr.className = 'proj-board-hdr';
+    const titleWrap = document.createElement('div');
+    titleWrap.innerHTML = `<div class="proj-board-title">${tabDef.icon} ${tabDef.name}</div>
+      <div class="proj-board-sub">Custom tab · synced live via Supabase</div>`;
+    const btnGroup = document.createElement('div');
+    btnGroup.style.display = 'flex';
+    btnGroup.style.gap = '10px';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-save';
+    addBtn.textContent = '＋ Add Row';
+    addBtn.addEventListener('click', () => addCustomTabRow(tabDef.id));
+    const deleteTabBtn = buildDeleteButton(() => deleteCustomTab(tabDef.id), 'Delete this entire tab');
+    deleteTabBtn.classList.add('panel-delete-tab-btn');
+    deleteTabBtn.innerHTML = '🗑 Delete Tab';
+    btnGroup.appendChild(addBtn);
+    btnGroup.appendChild(deleteTabBtn);
+    hdr.appendChild(titleWrap);
+    hdr.appendChild(btnGroup);
+    panel.appendChild(hdr);
+
+    const tableWrap = document.createElement('div');
+    tableWrap.className = 'table-wrap';
+    const table = document.createElement('table');
+    table.id = 'custom-table-' + tabDef.id;
+    table.innerHTML = `<thead><tr>${tabDef.columns.map(c => `<th>${c.name}</th>`).join('')}<th></th></tr></thead><tbody></tbody>`;
+    tableWrap.appendChild(table);
+    panel.appendChild(tableWrap);
+
+    const emptyMsg = document.createElement('div');
+    emptyMsg.className = 'custom-tab-empty';
+    emptyMsg.id = 'custom-empty-' + tabDef.id;
+    emptyMsg.textContent = 'No rows yet — add your first one above.';
+    panel.appendChild(emptyMsg);
+
+    document.getElementById('custom-tab-panels').appendChild(panel);
+    loadAndRenderCustomTab(tabDef.id);
+  }
+
+  // Removes a custom tab entirely: its nav button, its panel, and its data
+  // (dcs_custom_tab_rows cascade-deletes automatically via the FK in schema.sql).
+  // If the deleted tab was active, falls back to the first built-in tab.
+  async function deleteCustomTab(tabId) {
+    const btn = document.querySelector(`.tab-btn[data-custom-id="${tabId}"]`);
+    const btnWrap = btn ? btn.closest('.tab-btn-wrap') : null;
+    const wasActive = btn && btn.classList.contains('active');
+    if (btnWrap) btnWrap.remove();
+    const panel = document.getElementById('tab-' + tabId);
+    if (panel) panel.remove();
+    delete customTabDefsCache[tabId];
+    if (wasActive) {
+      const firstBtn = document.querySelector('.tab-nav .tab-btn');
+      if (firstBtn) firstBtn.click();
+    }
+    try {
+      await dcsFetch(`dcs_custom_tabs?id=eq.${tabId}`, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } });
+    } catch (e) {
+      // Tab is already removed from the UI; a failed delete just means it may
+      // reappear next reload. Not retried automatically to keep this simple.
+    }
+  }
+
+  async function addCustomTabRow(tabId) {
+    const def = customTabDefsCache[tabId];
+    if (!def) return;
+    const emptyValues = {};
+    def.columns.forEach(c => { emptyValues[c.name] = ''; });
+    try {
+      const created = await dcsFetch('dcs_custom_tab_rows', {
+        method: 'POST',
+        headers: { 'Prefer': 'return=representation' },
+        body: JSON.stringify({ tab_id: tabId, row_values: emptyValues, sort_order: (def.rows || []).length })
+      });
+      def.rows = def.rows || [];
+      def.rows.push(created[0]);
+      renderCustomTabRows(tabId, def);
+    } catch (e) { /* leave table as-is; user can retry */ }
+  }
+
+  function deleteCustomTabRow(tabId, rowId) {
+    const def = customTabDefsCache[tabId];
+    if (def) def.rows = (def.rows || []).filter(r => r.id !== rowId);
+    renderCustomTabRows(tabId, def);
+    dcsFetch(`dcs_custom_tab_rows?id=eq.${rowId}`, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } })
+      .catch(() => { /* row already removed from view; ignore */ });
+  }
+
+  // Debounced PATCH of one row's row_values — coalesces rapid edits per row.
+  const customRowSaveTimers = {};
+  function patchCustomTabRow(rowId, newValues) {
+    clearTimeout(customRowSaveTimers[rowId]);
+    customRowSaveTimers[rowId] = setTimeout(() => {
+      dcsFetch(`dcs_custom_tab_rows?id=eq.${rowId}`, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ row_values: newValues })
+      }).catch(() => { /* swallow — next edit will retry with fresh values */ });
+    }, 600);
+  }
+
+  async function loadAndRenderCustomTab(tabId) {
+    const def = customTabDefsCache[tabId];
+    if (!def) return;
+    try {
+      def.rows = await fetchCustomTabRows(tabId);
+    } catch (e) {
+      def.rows = def.rows || [];
+    }
+    renderCustomTabRows(tabId, def);
+  }
+
+  function renderCustomTabRows(tabId, def) {
+    if (!def) return;
+    const table = document.getElementById('custom-table-' + tabId);
+    if (!table) return;
+    const tbody = table.querySelector('tbody');
+    const emptyMsg = document.getElementById('custom-empty-' + tabId);
+    tbody.innerHTML = '';
+    const rows = def.rows || [];
+    emptyMsg.style.display = rows.length ? 'none' : 'block';
+
+    rows.forEach((rowRecord) => {
+      const rowValues = rowRecord.row_values || {};
+      const tr = document.createElement('tr');
+      def.columns.forEach(col => {
+        const td = document.createElement('td');
+        if (col.type === 'status') {
+          const sel = document.createElement('select');
+          sel.className = 'status-sel';
+          sel.innerHTML = `<option value="">— Select —</option>
+            <option value="completed">Completed</option>
+            <option value="in-progress">In Progress</option>
+            <option value="not-started">Not Started</option>`;
+          sel.value = rowValues[col.name] || '';
+          const applyColor = () => {
+            sel.className = 'status-sel';
+            if (sel.value === 'completed') sel.classList.add('status-completed');
+            else if (sel.value === 'in-progress') sel.classList.add('status-in-progress');
+            else if (sel.value === 'not-started') sel.classList.add('status-not-started');
+            else sel.classList.add('status-empty');
+          };
+          applyColor();
+          sel.addEventListener('change', () => {
+            applyColor();
+            rowValues[col.name] = sel.value;
+            patchCustomTabRow(rowRecord.id, rowValues);
+          });
+          td.appendChild(sel);
+        } else if (col.type === 'date') {
+          const inp = document.createElement('input');
+          inp.type = 'date';
+          inp.value = rowValues[col.name] || '';
+          inp.addEventListener('change', () => {
+            rowValues[col.name] = inp.value;
+            patchCustomTabRow(rowRecord.id, rowValues);
+          });
+          td.appendChild(inp);
+        } else {
+          // text or textarea — both rendered as inline-editable divs
+          const div = document.createElement('div');
+          div.className = 'editable';
+          div.contentEditable = 'true';
+          div.setAttribute('data-placeholder', `Add ${col.name.toLowerCase()}…`);
+          div.textContent = rowValues[col.name] || '';
+          div.classList.toggle('has-content', !!rowValues[col.name]);
+          div.addEventListener('input', debounce(() => {
+            div.classList.toggle('has-content', div.textContent.trim().length > 0);
+            rowValues[col.name] = div.textContent;
+            patchCustomTabRow(rowRecord.id, rowValues);
+          }, 500));
+          td.appendChild(div);
+        }
+        tr.appendChild(td);
+      });
+      const tdActions = document.createElement('td');
+      tdActions.appendChild(buildDeleteButton(() => deleteCustomTabRow(tabId, rowRecord.id), 'Delete this row'));
+      tr.appendChild(tdActions);
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Recreate all previously-created custom tabs on page load
+  (async () => {
+    try {
+      const defs = await fetchCustomTabDefs();
+      defs.forEach(def => addCustomTabButtonAndPanel({ ...def, rows: [] }));
+    } catch (e) {
+      // Supabase not configured yet, or unreachable — custom tabs just won't
+      // appear until it is; nothing else on the dashboard depends on this.
+    }
+  })();
+
+  // CJM is the tab shown by default on page load — load it immediately.
+  // PUD/KRA load lazily the first time their tab is clicked (see switchTab).
+  loadDcsRows('cjm');
+</script>
+</body>
+</html>
