@@ -850,6 +850,44 @@
   }
   .proj-cal-nav-btn:hover { background: var(--grey-pale); }
 
+  /* ── Digital CS Resources ── */
+  .res-group {
+    background: white; border: 1px solid var(--grey-light); border-radius: 12px;
+    margin-bottom: 16px; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .res-group-hdr {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; cursor: pointer; user-select: none;
+    background: var(--grey-pale); transition: background 0.15s;
+  }
+  .res-group-hdr:hover { background: #EFEBE5; }
+  .res-group-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; color: var(--charcoal); }
+  .res-group-count {
+    font-size: 11px; font-weight: 700; color: var(--grey-mid);
+    background: white; border-radius: 99px; padding: 2px 9px;
+  }
+  .res-group-chevron { font-size: 11px; color: var(--grey-mid); transition: transform 0.2s; }
+  .res-group.collapsed .res-group-chevron { transform: rotate(-90deg); }
+  .res-group-body { padding: 6px 18px 14px; }
+  .res-group.collapsed .res-group-body { display: none; }
+
+  .res-link-row {
+    display: flex; align-items: center; gap: 12px; padding: 10px 4px;
+    border-bottom: 1px solid var(--grey-pale);
+  }
+  .res-link-row:last-child { border-bottom: none; }
+  .res-link-icon { font-size: 15px; flex-shrink: 0; color: var(--orange-dark); }
+  .res-link-main { flex: 1; min-width: 0; }
+  .res-link-title {
+    font-weight: 600; font-size: 13px; color: var(--charcoal); text-decoration: none;
+    display: inline-block;
+  }
+  .res-link-title:hover { color: var(--orange-dark); text-decoration: underline; }
+  .res-link-notes { font-size: 11.5px; color: var(--grey-mid); margin-top: 2px; }
+  .res-link-url { font-size: 10.5px; color: var(--grey-mid); margin-top: 2px; word-break: break-all; }
+
+  .res-empty-group { color: var(--grey-mid); font-size: 12px; padding: 10px 4px; }
+
   .proj-archive-note {
     background: var(--grey-pale); color: var(--grey-mid); font-size: 12.5px;
     border-radius: 9px; padding: 10px 16px; margin-bottom: 18px;
@@ -990,6 +1028,7 @@
   <button class="tab-btn" onclick="switchTab('kra', this)">🎯 Planhat KRAs</button>
   <button class="tab-btn" onclick="switchTab('onb', this)">🌱 Nirali's Onboarding</button>
   <button class="tab-btn" onclick="switchTab('proj', this)">🔒 Project/ Tasks</button>
+  <button class="tab-btn" onclick="switchTab('res', this)">📚 Digital CS Resources</button>
   <span id="custom-tab-buttons"></span>
   <button class="tab-btn tab-btn-new" onclick="openNewTabModal()">＋ New Tab</button>
 </nav>
@@ -1231,6 +1270,28 @@
 
   </div>
 
+  <!-- ── Tab: Digital CS Resources ── -->
+  <div class="tab-panel" id="tab-res">
+    <div class="proj-board-hdr">
+      <div>
+        <div class="proj-board-title">📚 Digital CS Resources</div>
+        <div class="proj-board-sub">Links to documents, grouped by project · synced live via Supabase</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="onb-live" id="res-sync-indicator">
+          <span class="onb-live-dot stale" id="res-sync-dot"></span>
+          <span id="res-sync-label">Connecting…</span>
+        </div>
+        <button class="btn-save" onclick="openAddResourceModal()">＋ Add Resource</button>
+      </div>
+    </div>
+
+    <div id="res-groups">
+      <!-- filled by JS: one collapsible section per project -->
+    </div>
+    <div class="proj-empty" id="res-empty" style="display:none;">No resources yet — add your first link above.</div>
+  </div>
+
   <!-- Custom tabs (created via + New Tab) get injected here -->
   <div id="custom-tab-panels"></div>
 
@@ -1286,6 +1347,33 @@
     <div class="modal-box-error" id="proj-task-error" style="display:none;"></div>
 
     <button class="modal-box-submit" onclick="submitProjTask()">Add task</button>
+  </div>
+</div>
+
+<!-- Add Resource modal -->
+<div class="modal-overlay" id="add-resource-overlay">
+  <div class="modal-box">
+    <div class="modal-box-hdr">
+      <div class="modal-box-title">Add a resource</div>
+      <button class="modal-box-close" onclick="closeAddResourceModal()">✕</button>
+    </div>
+
+    <label class="form-label">Project</label>
+    <input type="text" class="form-input" id="res-project" placeholder="e.g. Swagger Expansion" list="res-known-projects">
+    <datalist id="res-known-projects"></datalist>
+
+    <label class="form-label">Title</label>
+    <input type="text" class="form-input" id="res-title" placeholder="e.g. Q3 Renewal Playbook">
+
+    <label class="form-label">Link (URL)</label>
+    <input type="text" class="form-input" id="res-url" placeholder="https://…">
+
+    <label class="form-label">Notes (optional)</label>
+    <textarea class="form-input" id="res-notes" rows="2" placeholder="What's this for?" style="resize:vertical;font-family:'DM Sans',sans-serif;"></textarea>
+
+    <div class="modal-box-error" id="res-error" style="display:none;"></div>
+
+    <button class="modal-box-submit" onclick="submitResource()">Add resource</button>
   </div>
 </div>
 
@@ -1589,6 +1677,7 @@
     if (id === 'kra') loadDcsRows('kra');
     if (id === 'onb') loadOnboardingData();
     if (id === 'proj') checkProjAccess();
+    if (id === 'res') loadResources();
   }
 
   // Apply status colours on load and change
@@ -2936,6 +3025,161 @@
       dayEl.appendChild(addBtn);
 
       grid.appendChild(dayEl);
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // Digital CS Resources — links to documents, grouped by project.
+  // Backed by dcs_resources, shared live via Supabase like every
+  // other non-Project/Tasks tab.
+  // ══════════════════════════════════════════════════════════════
+  let resourcesCache = [];
+  let resourcesLoaded = false;
+  let resCollapsedGroups = new Set(); // project names currently collapsed, UI-only state
+
+  function setResSync(state, label) {
+    setSyncIndicator('res-sync-dot', 'res-sync-label', state, label);
+  }
+
+  async function loadResources() {
+    if (resourcesLoaded) { renderResourceGroups(); return; }
+    resourcesLoaded = true;
+    setResSync('loading', 'Connecting…');
+    try {
+      resourcesCache = await dcsFetch('dcs_resources?order=project.asc,sort_order.asc');
+      setResSync('live', 'Live · loaded ' + new Date().toLocaleTimeString());
+    } catch (e) {
+      resourcesCache = [];
+      setResSync('error', 'Could not load — check Supabase config');
+    }
+    renderResourceGroups();
+  }
+
+  function openAddResourceModal() {
+    document.getElementById('add-resource-overlay').classList.add('visible');
+    document.getElementById('res-project').value = '';
+    document.getElementById('res-title').value = '';
+    document.getElementById('res-url').value = '';
+    document.getElementById('res-notes').value = '';
+    document.getElementById('res-error').style.display = 'none';
+    const names = [...new Set(resourcesCache.map(r => r.project).filter(Boolean))];
+    document.getElementById('res-known-projects').innerHTML =
+      names.map(n => `<option value="${n.replace(/"/g, '&quot;')}">`).join('');
+  }
+
+  function closeAddResourceModal() {
+    document.getElementById('add-resource-overlay').classList.remove('visible');
+  }
+
+  async function submitResource() {
+    const project = document.getElementById('res-project').value.trim();
+    const title = document.getElementById('res-title').value.trim();
+    let url = document.getElementById('res-url').value.trim();
+    const notes = document.getElementById('res-notes').value.trim();
+    const errEl = document.getElementById('res-error');
+
+    if (!project || !title || !url) {
+      errEl.textContent = 'Project, title, and link are all required.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    errEl.style.display = 'none';
+
+    setResSync('loading', 'Saving…');
+    try {
+      const sameProjectCount = resourcesCache.filter(r => r.project === project).length;
+      const created = await dcsFetch('dcs_resources', {
+        method: 'POST',
+        headers: { 'Prefer': 'return=representation' },
+        body: JSON.stringify({ project, title, url, notes, sort_order: sameProjectCount })
+      });
+      resourcesCache.push(created[0]);
+      closeAddResourceModal();
+      renderResourceGroups();
+      setResSync('live', 'Live · saved ' + new Date().toLocaleTimeString());
+    } catch (e) {
+      errEl.textContent = 'Could not save — check Supabase connection.';
+      errEl.style.display = 'block';
+      setResSync('error', 'Save failed');
+    }
+  }
+
+  function deleteResource(id) {
+    resourcesCache = resourcesCache.filter(r => r.id !== id);
+    renderResourceGroups();
+    dcsFetch(`dcs_resources?id=eq.${id}`, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } })
+      .then(() => setResSync('live', 'Live · deleted ' + new Date().toLocaleTimeString()))
+      .catch(() => setResSync('error', 'Delete failed — check connection'));
+  }
+
+  function renderResourceGroups() {
+    const wrap = document.getElementById('res-groups');
+    const empty = document.getElementById('res-empty');
+    wrap.innerHTML = '';
+    empty.style.display = resourcesCache.length ? 'none' : 'block';
+
+    // Group resources by project, preserving first-seen order
+    const groups = [];
+    const groupIndex = {};
+    resourcesCache.forEach(r => {
+      if (!(r.project in groupIndex)) {
+        groupIndex[r.project] = groups.length;
+        groups.push({ project: r.project, items: [] });
+      }
+      groups[groupIndex[r.project]].items.push(r);
+    });
+
+    groups.forEach(group => {
+      const groupEl = document.createElement('div');
+      groupEl.className = 'res-group' + (resCollapsedGroups.has(group.project) ? ' collapsed' : '');
+
+      const hdr = document.createElement('div');
+      hdr.className = 'res-group-hdr';
+      hdr.innerHTML = `<div class="res-group-title"><span class="res-group-chevron">▾</span> 📁 ${group.project}</div>
+        <span class="res-group-count">${group.items.length}</span>`;
+      hdr.addEventListener('click', () => {
+        if (resCollapsedGroups.has(group.project)) resCollapsedGroups.delete(group.project);
+        else resCollapsedGroups.add(group.project);
+        groupEl.classList.toggle('collapsed');
+      });
+      groupEl.appendChild(hdr);
+
+      const body = document.createElement('div');
+      body.className = 'res-group-body';
+      group.items.forEach(res => {
+        const row = document.createElement('div');
+        row.className = 'res-link-row';
+        const icon = document.createElement('span');
+        icon.className = 'res-link-icon';
+        icon.textContent = '🔗';
+        const main = document.createElement('div');
+        main.className = 'res-link-main';
+        const link = document.createElement('a');
+        link.className = 'res-link-title';
+        link.href = res.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = res.title;
+        main.appendChild(link);
+        if (res.notes) {
+          const notesEl = document.createElement('div');
+          notesEl.className = 'res-link-notes';
+          notesEl.textContent = res.notes;
+          main.appendChild(notesEl);
+        }
+        const urlEl = document.createElement('div');
+        urlEl.className = 'res-link-url';
+        urlEl.textContent = res.url;
+        main.appendChild(urlEl);
+        const delBtn = buildDeleteButton(() => deleteResource(res.id), 'Delete this resource');
+        row.appendChild(icon);
+        row.appendChild(main);
+        row.appendChild(delBtn);
+        body.appendChild(row);
+      });
+      groupEl.appendChild(body);
+      wrap.appendChild(groupEl);
     });
   }
 
