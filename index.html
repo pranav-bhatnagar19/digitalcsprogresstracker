@@ -1589,6 +1589,11 @@
     if (projTabBtn) {
       projTabBtn.style.display = (dcsCurrentMember && dcsCurrentMember.can_access_project_tasks) ? '' : 'none';
     }
+
+    // CJM is the tab shown by default — load it now that we actually have a
+    // valid session, rather than unconditionally at page-load time (which
+    // raced ahead of login for anyone without an already-persisted session).
+    if (dcsCurrentMember) loadDcsRows('cjm');
   }
 
   function lockDashboard() {
@@ -1596,6 +1601,12 @@
     document.getElementById('dashboard-root').style.display = 'none';
     document.getElementById('user-badge').style.display = 'none';
     dcsCurrentMember = null;
+    // Clear "already loaded" flags so a different person signing in within
+    // the same tab gets fresh data fetched under their own session/permissions,
+    // rather than silently reusing whatever the previous user had loaded.
+    dcsRowsLoadedFor = { cjm: false, pud: false, kra: false };
+    resourcesLoaded = false;
+    projTasksLoaded = false;
   }
 
   async function attemptLogin() {
@@ -3534,10 +3545,6 @@
       // appear until it is; nothing else on the dashboard depends on this.
     }
   })();
-
-  // CJM is the tab shown by default on page load — load it immediately.
-  // PUD/KRA load lazily the first time their tab is clicked (see switchTab).
-  loadDcsRows('cjm');
 </script>
 </body>
 </html>
