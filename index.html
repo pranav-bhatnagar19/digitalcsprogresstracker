@@ -888,6 +888,62 @@
 
   .res-empty-group { color: var(--grey-mid); font-size: 12px; padding: 10px 4px; }
 
+  /* ── Brainstorming Ideas — board grid ── */
+  .board-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+  }
+  .board-card {
+    background: white; border: 1px solid var(--grey-light); border-radius: 12px;
+    overflow: hidden; cursor: pointer; box-shadow: var(--shadow);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .board-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.12); }
+  .board-card-thumb {
+    height: 140px; background: #fafafa; display: flex; align-items: center;
+    justify-content: center; overflow: hidden; border-bottom: 1px solid var(--grey-light);
+  }
+  .board-card-thumb svg { width: 100%; height: 100%; object-fit: contain; }
+  .board-card-thumb-placeholder { font-size: 28px; color: var(--grey-light); }
+  .board-card-info { padding: 10px 14px; }
+  .board-card-title { font-weight: 700; font-size: 13px; color: var(--charcoal); }
+  .board-card-meta { font-size: 11px; color: var(--grey-mid); margin-top: 2px; }
+
+  /* ── Board modal (view + edit) — wider/taller than the standard modal-box ── */
+  .board-modal-box {
+    background: white; border-radius: 16px; padding: 22px 26px;
+    width: 92vw; max-width: 1100px; height: 86vh;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    display: flex; flex-direction: column;
+  }
+  .board-modal-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 12px; }
+  .board-modal-title { font-size: 17px; font-weight: 700; color: var(--charcoal); }
+  .board-title-input {
+    flex: 1; border: 1.5px solid var(--grey-light); border-radius: 8px;
+    padding: 9px 12px; font-size: 15px; font-weight: 700; font-family: 'DM Sans', sans-serif;
+    outline: none; color: var(--charcoal);
+  }
+  .board-title-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(244,121,32,0.12); }
+  .board-view-thumb-wrap {
+    flex: 1; background: #fafafa; border: 1px solid var(--grey-light); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 0;
+  }
+  .board-view-thumb-wrap svg { width: 100%; height: 100%; object-fit: contain; }
+  .board-canvas-wrap {
+    flex: 1; border: 1px solid var(--grey-light); border-radius: 10px; overflow: hidden; min-height: 0;
+  }
+  #excalidraw-mount { width: 100%; height: 100%; }
+  .board-modal-footer {
+    display: flex; justify-content: space-between; align-items: center; margin-top: 14px;
+  }
+  .board-modal-meta { font-size: 12px; color: var(--grey-mid); }
+  .btn-secondary-modal {
+    background: white; color: var(--charcoal); border: 1.5px solid var(--grey-light);
+    border-radius: 8px; padding: 10px 18px; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s;
+  }
+  .btn-secondary-modal:hover { background: var(--grey-pale); }
+
   .proj-archive-note {
     background: var(--grey-pale); color: var(--grey-mid); font-size: 12.5px;
     border-radius: 9px; padding: 10px 16px; margin-bottom: 18px;
@@ -972,6 +1028,35 @@
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<!-- Excalidraw (Brainstorming Ideas tab) — loaded as ES modules via import map,
+     per Excalidraw's own documented browser-embed approach. This is the one part
+     of the dashboard that isn't plain global-scope JS, so we bridge it onto
+     `window` below for the rest of the app's vanilla JS to call into. -->
+<link rel="stylesheet" href="https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.css" />
+<script>
+  window.EXCALIDRAW_ASSET_PATH = "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/prod/";
+</script>
+<script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@19.0.0",
+      "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@19.0.0",
+      "react-dom/client": "https://esm.sh/react-dom@19.0.0/client"
+    }
+  }
+</script>
+<script type="module">
+  import React from "react";
+  import { createRoot } from "react-dom/client";
+  import { Excalidraw, exportToSvg } from "https://esm.sh/@excalidraw/excalidraw@0.18.0?external=react,react-dom";
+
+  // Bridge into plain global scope so the rest of the dashboard's vanilla-JS
+  // script block (below) can use these without itself being a module.
+  window.__excalidrawBridge = { React, createRoot, Excalidraw, exportToSvg, ready: true };
+  window.dispatchEvent(new Event('excalidraw-ready'));
+</script>
 </head>
 <body>
 
@@ -1029,6 +1114,7 @@
   <button class="tab-btn" onclick="switchTab('onb', this)">🌱 Nirali's Onboarding</button>
   <button class="tab-btn" onclick="switchTab('proj', this)">🔒 Project/ Tasks</button>
   <button class="tab-btn" onclick="switchTab('res', this)">📚 Digital CS Resources</button>
+  <button class="tab-btn" onclick="switchTab('brain', this)">🧠 Brainstorming Ideas</button>
   <span id="custom-tab-buttons"></span>
   <button class="tab-btn tab-btn-new" onclick="openNewTabModal()">＋ New Tab</button>
 </nav>
@@ -1292,6 +1378,28 @@
     <div class="proj-empty" id="res-empty" style="display:none;">No resources yet — add your first link above.</div>
   </div>
 
+  <!-- ── Tab: Brainstorming Ideas ── -->
+  <div class="tab-panel" id="tab-brain">
+    <div class="proj-board-hdr">
+      <div>
+        <div class="proj-board-title">🧠 Brainstorming Ideas</div>
+        <div class="proj-board-sub">Sketch and save whiteboards · synced live via Supabase</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="onb-live" id="brain-sync-indicator">
+          <span class="onb-live-dot stale" id="brain-sync-dot"></span>
+          <span id="brain-sync-label">Connecting…</span>
+        </div>
+        <button class="btn-save" onclick="openNewBoardModal()">＋ New Board</button>
+      </div>
+    </div>
+
+    <div class="board-grid" id="board-grid">
+      <!-- filled by JS: one thumbnail card per saved board -->
+    </div>
+    <div class="proj-empty" id="board-empty" style="display:none;">No boards yet — click "+ New Board" to start sketching.</div>
+  </div>
+
   <!-- Custom tabs (created via + New Tab) get injected here -->
   <div id="custom-tab-panels"></div>
 
@@ -1374,6 +1482,49 @@
     <div class="modal-box-error" id="res-error" style="display:none;"></div>
 
     <button class="modal-box-submit" onclick="submitResource()">Add resource</button>
+  </div>
+</div>
+
+<!-- Board modal — view mode (thumbnail + Edit/Delete) and edit mode (live Excalidraw canvas) -->
+<div class="modal-overlay" id="board-overlay">
+  <div class="board-modal-box">
+
+    <!-- View mode: shows the saved thumbnail full-size with Edit/Delete actions -->
+    <div id="board-view-mode">
+      <div class="board-modal-hdr">
+        <div class="board-modal-title" id="board-view-title">Untitled board</div>
+        <button class="modal-box-close" onclick="closeBoardModal()">✕</button>
+      </div>
+      <div class="board-view-thumb-wrap" id="board-view-thumb-wrap">
+        <!-- thumbnail SVG injected here -->
+      </div>
+      <div class="board-modal-footer">
+        <span class="board-modal-meta" id="board-view-meta"></span>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-save" onclick="enterBoardEditMode()">✏️ Edit</button>
+          <span id="board-delete-slot"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit mode: live Excalidraw canvas -->
+    <div id="board-edit-mode" style="display:none;">
+      <div class="board-modal-hdr">
+        <input type="text" class="board-title-input" id="board-title-input" placeholder="Untitled board">
+        <button class="modal-box-close" onclick="closeBoardModal()">✕</button>
+      </div>
+      <div class="board-canvas-wrap">
+        <div id="excalidraw-mount"></div>
+      </div>
+      <div class="board-modal-footer">
+        <span class="board-modal-meta" id="board-edit-error" style="color:var(--red); display:none;"></span>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-secondary-modal" onclick="cancelBoardEdit()">Cancel</button>
+          <button class="btn-save" onclick="saveBoard()">💾 Save</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1678,6 +1829,7 @@
     if (id === 'onb') loadOnboardingData();
     if (id === 'proj') checkProjAccess();
     if (id === 'res') loadResources();
+    if (id === 'brain') loadBoards();
   }
 
   // Apply status colours on load and change
@@ -3181,6 +3333,219 @@
       groupEl.appendChild(body);
       wrap.appendChild(groupEl);
     });
+  }
+
+
+  // ══════════════════════════════════════════════════════════════
+  // Brainstorming Ideas — boards backed by dcs_boards, drawn with
+  // the real Excalidraw canvas (bridged in from the module script
+  // in <head> via window.__excalidrawBridge).
+  // ══════════════════════════════════════════════════════════════
+  let boardsCache = [];
+  let boardsLoaded = false;
+  let activeBoardId = null;       // null while creating a brand-new board
+  let excalidrawReactRoot = null; // the mounted React root, so we can unmount cleanly
+  let excalidrawAPIRef = null;    // Excalidraw's imperative API, set via the excalidrawAPI prop
+
+  function setBrainSync(state, label) {
+    setSyncIndicator('brain-sync-dot', 'brain-sync-label', state, label);
+  }
+
+  async function loadBoards() {
+    if (boardsLoaded) return;
+    boardsLoaded = true;
+    setBrainSync('loading', 'Connecting…');
+    try {
+      boardsCache = await dcsFetch('dcs_boards?select=id,title,thumbnail,updated_at&order=updated_at.desc');
+      setBrainSync('live', 'Live · loaded ' + new Date().toLocaleTimeString());
+    } catch (e) {
+      boardsCache = [];
+      setBrainSync('error', 'Could not load — check Supabase config');
+    }
+    renderBoardGrid();
+  }
+
+  function renderBoardGrid() {
+    const grid = document.getElementById('board-grid');
+    const empty = document.getElementById('board-empty');
+    grid.innerHTML = '';
+    empty.style.display = boardsCache.length ? 'none' : 'block';
+
+    boardsCache.forEach(board => {
+      const card = document.createElement('div');
+      card.className = 'board-card';
+      const thumb = document.createElement('div');
+      thumb.className = 'board-card-thumb';
+      thumb.innerHTML = board.thumbnail ? board.thumbnail : '<span class="board-card-thumb-placeholder">🧠</span>';
+      const info = document.createElement('div');
+      info.className = 'board-card-info';
+      info.innerHTML = `<div class="board-card-title">${board.title || 'Untitled board'}</div>
+        <div class="board-card-meta">Updated ${formatProjDate(board.updated_at.slice(0,10))}</div>`;
+      card.appendChild(thumb);
+      card.appendChild(info);
+      card.addEventListener('click', () => openBoardModal(board.id));
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Opening the modal ──────────────────────────────────────────
+  async function openBoardModal(boardId) {
+    activeBoardId = boardId;
+    document.getElementById('board-overlay').classList.add('visible');
+    document.getElementById('board-edit-mode').style.display = 'none';
+    document.getElementById('board-view-mode').style.display = 'block';
+
+    // Fetch the full record (grid view only loaded id/title/thumbnail/updated_at
+    // to keep the initial load light — scene_data can be large).
+    setBrainSync('loading', 'Loading board…');
+    try {
+      const rows = await dcsFetch(`dcs_boards?id=eq.${boardId}&select=*`);
+      const board = rows[0];
+      const cached = boardsCache.find(b => b.id === boardId);
+      if (cached) Object.assign(cached, board);
+      document.getElementById('board-view-title').textContent = board.title || 'Untitled board';
+      document.getElementById('board-view-thumb-wrap').innerHTML = board.thumbnail || '<span class="board-card-thumb-placeholder">🧠</span>';
+      document.getElementById('board-view-meta').textContent = 'Updated ' + formatProjDate(board.updated_at.slice(0,10));
+      const delSlot = document.getElementById('board-delete-slot');
+      delSlot.innerHTML = '';
+      delSlot.appendChild(buildDeleteButton(() => deleteBoard(boardId), 'Delete this board'));
+      setBrainSync('live', 'Live');
+    } catch (e) {
+      setBrainSync('error', 'Could not load this board');
+    }
+  }
+
+  function openNewBoardModal() {
+    activeBoardId = null;
+    document.getElementById('board-overlay').classList.add('visible');
+    document.getElementById('board-view-mode').style.display = 'none';
+    document.getElementById('board-edit-mode').style.display = 'block';
+    document.getElementById('board-title-input').value = '';
+    document.getElementById('board-edit-error').style.display = 'none';
+    mountExcalidraw(null);
+  }
+
+  function closeBoardModal() {
+    document.getElementById('board-overlay').classList.remove('visible');
+    unmountExcalidraw();
+    activeBoardId = null;
+  }
+
+  async function enterBoardEditMode() {
+    document.getElementById('board-view-mode').style.display = 'none';
+    document.getElementById('board-edit-mode').style.display = 'block';
+    document.getElementById('board-edit-error').style.display = 'none';
+    const board = boardsCache.find(b => b.id === activeBoardId);
+    document.getElementById('board-title-input').value = (board && board.title) || '';
+    setBrainSync('loading', 'Loading canvas…');
+    try {
+      const rows = await dcsFetch(`dcs_boards?id=eq.${activeBoardId}&select=scene_data`);
+      mountExcalidraw(rows[0] ? rows[0].scene_data : null);
+      setBrainSync('live', 'Live');
+    } catch (e) {
+      mountExcalidraw(null);
+      setBrainSync('error', 'Could not load scene — starting blank');
+    }
+  }
+
+  function cancelBoardEdit() {
+    unmountExcalidraw();
+    if (activeBoardId) {
+      // Was editing an existing board — drop back to its view mode rather than closing.
+      document.getElementById('board-edit-mode').style.display = 'none';
+      openBoardModal(activeBoardId);
+    } else {
+      closeBoardModal();
+    }
+  }
+
+  // ── Mounting / unmounting the React + Excalidraw component ─────
+  function mountExcalidraw(initialSceneData) {
+    const bridge = window.__excalidrawBridge;
+    const mountEl = document.getElementById('excalidraw-mount');
+    if (!bridge || !bridge.ready) {
+      mountEl.innerHTML = '<div style="padding:30px;text-align:center;color:var(--grey-mid);">Excalidraw failed to load from the CDN — check your connection and reload.</div>';
+      return;
+    }
+    unmountExcalidraw(); // safety: never double-mount
+    const { React, createRoot, Excalidraw } = bridge;
+    excalidrawReactRoot = createRoot(mountEl);
+    const props = {
+      excalidrawAPI: (api) => { excalidrawAPIRef = api; },
+    };
+    if (initialSceneData && initialSceneData.elements) {
+      props.initialData = { elements: initialSceneData.elements, appState: initialSceneData.appState || {} };
+    }
+    excalidrawReactRoot.render(React.createElement(Excalidraw, props));
+  }
+
+  function unmountExcalidraw() {
+    if (excalidrawReactRoot) {
+      try { excalidrawReactRoot.unmount(); } catch (e) {}
+      excalidrawReactRoot = null;
+    }
+    excalidrawAPIRef = null;
+    const mountEl = document.getElementById('excalidraw-mount');
+    if (mountEl) mountEl.innerHTML = '';
+  }
+
+  // ── Saving ───────────────────────────────────────────────────────
+  async function saveBoard() {
+    const bridge = window.__excalidrawBridge;
+    const errEl = document.getElementById('board-edit-error');
+    if (!excalidrawAPIRef || !bridge) {
+      errEl.textContent = 'Canvas not ready yet — try again in a moment.';
+      errEl.style.display = 'block';
+      return;
+    }
+    const title = document.getElementById('board-title-input').value.trim() || 'Untitled board';
+    const elements = excalidrawAPIRef.getSceneElements();
+    const appState = excalidrawAPIRef.getAppState();
+    const sceneData = { elements, appState: { viewBackgroundColor: appState.viewBackgroundColor } };
+
+    let thumbnailSvg = null;
+    try {
+      const svg = await bridge.exportToSvg({ elements, appState: { ...appState, exportBackground: true }, files: null });
+      thumbnailSvg = svg.outerHTML;
+    } catch (e) {
+      // Thumbnail generation failing shouldn't block saving the actual board data.
+      thumbnailSvg = null;
+    }
+
+    setBrainSync('loading', 'Saving…');
+    try {
+      if (activeBoardId) {
+        await dcsFetch(`dcs_boards?id=eq.${activeBoardId}`, {
+          method: 'PATCH',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ title, scene_data: sceneData, thumbnail: thumbnailSvg })
+        });
+      } else {
+        const created = await dcsFetch('dcs_boards', {
+          method: 'POST',
+          headers: { 'Prefer': 'return=representation' },
+          body: JSON.stringify({ title, scene_data: sceneData, thumbnail: thumbnailSvg })
+        });
+        activeBoardId = created[0].id;
+      }
+      setBrainSync('live', 'Live · saved ' + new Date().toLocaleTimeString());
+      boardsLoaded = false; // force a fresh fetch so the grid reflects the new save
+      await loadBoards();
+      closeBoardModal();
+    } catch (e) {
+      errEl.textContent = 'Save failed — check Supabase connection.';
+      errEl.style.display = 'block';
+      setBrainSync('error', 'Save failed');
+    }
+  }
+
+  function deleteBoard(boardId) {
+    boardsCache = boardsCache.filter(b => b.id !== boardId);
+    renderBoardGrid();
+    closeBoardModal();
+    dcsFetch(`dcs_boards?id=eq.${boardId}`, { method: 'DELETE', headers: { 'Prefer': 'return=minimal' } })
+      .then(() => setBrainSync('live', 'Live · deleted ' + new Date().toLocaleTimeString()))
+      .catch(() => setBrainSync('error', 'Delete failed — check connection'));
   }
 
 
