@@ -797,6 +797,8 @@
     font-weight: 700; font-size: 14.5px; color: #3A3226; margin-bottom: 8px;
     line-height: 1.3; word-break: break-word; outline: none;
   }
+  .sticky-note-title.res-note-link { text-decoration: none; cursor: pointer; display: block; }
+  .sticky-note-title.res-note-link:hover { text-decoration: underline; }
   .sticky-note-desc {
     font-size: 12.5px; color: #5A5040; line-height: 1.5; margin-bottom: 12px;
     word-break: break-word; white-space: pre-wrap; outline: none; min-height: 16px;
@@ -868,23 +870,21 @@
   }
   .res-group-chevron { font-size: 11px; color: var(--grey-mid); transition: transform 0.2s; }
   .res-group.collapsed .res-group-chevron { transform: rotate(-90deg); }
-  .res-group-body { padding: 6px 18px 14px; }
+  .res-group-body { padding: 16px 18px 18px; }
   .res-group.collapsed .res-group-body { display: none; }
 
-  .res-link-row {
-    display: flex; align-items: center; gap: 12px; padding: 10px 4px;
-    border-bottom: 1px solid var(--grey-pale);
+  .res-note-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px; align-items: start;
   }
-  .res-link-row:last-child { border-bottom: none; }
-  .res-link-icon { font-size: 15px; flex-shrink: 0; color: var(--orange-dark); }
-  .res-link-main { flex: 1; min-width: 0; }
-  .res-link-title {
-    font-weight: 600; font-size: 13px; color: var(--charcoal); text-decoration: none;
-    display: inline-block;
+
+  /* Resource sticky notes reuse .sticky-note's tilt/tape/shadow look from
+     Project/Tasks, with resource-specific content (link instead of status row). */
+  .res-note-url {
+    font-size: 10px; color: rgba(58,50,38,0.55); margin-top: 8px;
+    word-break: break-all; line-height: 1.4;
   }
-  .res-link-title:hover { color: var(--orange-dark); text-decoration: underline; }
-  .res-link-notes { font-size: 11.5px; color: var(--grey-mid); margin-top: 2px; }
-  .res-link-url { font-size: 10.5px; color: var(--grey-mid); margin-top: 2px; word-break: break-all; }
+  .res-note-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
 
   .res-empty-group { color: var(--grey-mid); font-size: 12px; padding: 10px 4px; }
 
@@ -1370,6 +1370,16 @@
 
     <label class="form-label">Notes (optional)</label>
     <textarea class="form-input" id="res-notes" rows="2" placeholder="What's this for?" style="resize:vertical;font-family:'DM Sans',sans-serif;"></textarea>
+
+    <label class="form-label">Sticky note colour</label>
+    <div class="proj-color-picker" id="res-color-picker">
+      <span class="proj-color-dot" data-color="yellow" style="background:#FFE680;"></span>
+      <span class="proj-color-dot" data-color="orange" style="background:#FFC089;"></span>
+      <span class="proj-color-dot" data-color="pink" style="background:#FFB3C6;"></span>
+      <span class="proj-color-dot" data-color="green" style="background:#B8E8C8;"></span>
+      <span class="proj-color-dot" data-color="blue" style="background:#AFD8F0;"></span>
+      <span class="proj-color-dot" data-color="purple" style="background:#D6C2EE;"></span>
+    </div>
 
     <div class="modal-box-error" id="res-error" style="display:none;"></div>
 
@@ -3036,6 +3046,20 @@
   let resourcesCache = [];
   let resourcesLoaded = false;
   let resCollapsedGroups = new Set(); // project names currently collapsed, UI-only state
+  let resSelectedColor = 'yellow';
+
+  const RES_COLOR_HEX = {
+    yellow: '#FFE680', orange: '#FFC089', pink: '#FFB3C6',
+    green: '#B8E8C8', blue: '#AFD8F0', purple: '#D6C2EE'
+  };
+
+  document.querySelectorAll('#res-color-picker .proj-color-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      resSelectedColor = dot.dataset.color;
+      document.querySelectorAll('#res-color-picker .proj-color-dot').forEach(d => d.classList.remove('selected'));
+      dot.classList.add('selected');
+    });
+  });
 
   function setResSync(state, label) {
     setSyncIndicator('res-sync-dot', 'res-sync-label', state, label);
@@ -3062,6 +3086,10 @@
     document.getElementById('res-url').value = '';
     document.getElementById('res-notes').value = '';
     document.getElementById('res-error').style.display = 'none';
+    resSelectedColor = 'yellow';
+    document.querySelectorAll('#res-color-picker .proj-color-dot').forEach(d => {
+      d.classList.toggle('selected', d.dataset.color === resSelectedColor);
+    });
     const names = [...new Set(resourcesCache.map(r => r.project).filter(Boolean))];
     document.getElementById('res-known-projects').innerHTML =
       names.map(n => `<option value="${n.replace(/"/g, '&quot;')}">`).join('');
@@ -3092,7 +3120,7 @@
       const created = await dcsFetch('dcs_resources', {
         method: 'POST',
         headers: { 'Prefer': 'return=representation' },
-        body: JSON.stringify({ project, title, url, notes, sort_order: sameProjectCount })
+        body: JSON.stringify({ project, title, url, notes, color: resSelectedColor, sort_order: sameProjectCount })
       });
       resourcesCache.push(created[0]);
       closeAddResourceModal();
@@ -3147,37 +3175,44 @@
 
       const body = document.createElement('div');
       body.className = 'res-group-body';
-      group.items.forEach(res => {
-        const row = document.createElement('div');
-        row.className = 'res-link-row';
-        const icon = document.createElement('span');
-        icon.className = 'res-link-icon';
-        icon.textContent = '🔗';
-        const main = document.createElement('div');
-        main.className = 'res-link-main';
+      const noteGrid = document.createElement('div');
+      noteGrid.className = 'res-note-grid';
+      group.items.forEach((res, i) => {
+        const note = document.createElement('div');
+        note.className = 'sticky-note';
+        note.style.background = RES_COLOR_HEX[res.color] || RES_COLOR_HEX.yellow;
+        // Deterministic-but-varied tilt per note (no random re-tilt on every re-render)
+        const tilt = ((i % 2 === 0) ? -1 : 1) * (0.4 + (i % 3) * 0.3);
+        note.style.setProperty('--tilt', tilt + 'deg');
+
         const link = document.createElement('a');
-        link.className = 'res-link-title';
+        link.className = 'sticky-note-title res-note-link';
         link.href = res.url;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
         link.textContent = res.title;
-        main.appendChild(link);
+        note.appendChild(link);
+
         if (res.notes) {
           const notesEl = document.createElement('div');
-          notesEl.className = 'res-link-notes';
+          notesEl.className = 'sticky-note-desc';
           notesEl.textContent = res.notes;
-          main.appendChild(notesEl);
+          note.appendChild(notesEl);
         }
+
         const urlEl = document.createElement('div');
-        urlEl.className = 'res-link-url';
+        urlEl.className = 'res-note-url';
         urlEl.textContent = res.url;
-        main.appendChild(urlEl);
-        const delBtn = buildDeleteButton(() => deleteResource(res.id), 'Delete this resource');
-        row.appendChild(icon);
-        row.appendChild(main);
-        row.appendChild(delBtn);
-        body.appendChild(row);
+        note.appendChild(urlEl);
+
+        const actions = document.createElement('div');
+        actions.className = 'res-note-actions';
+        actions.appendChild(buildDeleteButton(() => deleteResource(res.id), 'Delete this resource'));
+        note.appendChild(actions);
+
+        noteGrid.appendChild(note);
       });
+      body.appendChild(noteGrid);
       groupEl.appendChild(body);
       wrap.appendChild(groupEl);
     });
